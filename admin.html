@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新しいオーディション登録</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container form-container">
+
+<h1>➕ 新しいオーディション登録</h1>
+<label>案件番号（4桁）</label>
+<input type="text" id="caseNumber" maxlength="4" placeholder="0001">
+<label>案件名</label>
+<input type="text" id="caseName" placeholder="案件名を入力">
+<div class="date-row">
+
+<label for="auditionDate">最初のオーディション日</label>
+
+<input type="date" id="auditionDate">
+
+<label class="unknown-date">
+<input type="checkbox" id="dateUnknown">
+オーディション日未定
+</label>
+
+</div>
+
+
+<label>現在の状況</label>
+<select id="status">
+<option value="書類選考中">🟡 書類選考中</option>
+<option value="書類選考終了">🟥 書類選考終了</option>
+<option value="AD結果待ち">🟢 AD結果待ち</option>
+<option value="AD選考終了">🟦 AD選考終了</option>
+</select>
+
+<button onclick="saveAudition()">
+
+💾 保存する
+</button>
+
+<button class="home-button" onclick="location.href='index.html'">
+🏠 ホームへ戻る
+</button>
+<hr>
+<script src="app.js"></script>
+</body>
+</html>

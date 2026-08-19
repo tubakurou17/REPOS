@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>登録案件一覧</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>📋 登録案件一覧</h2>
+
+<!-- 案件番号検索 -->
+<div class="search-area">
+
+<input
+    type="text"
+    placeholder="案件番号を入力"
+    id="caseNumberSearch"
+>
+
+<button
+    class="search-button"
+    id="searchButton"
+>
+🔍 検索
+</button>
+
+
+</div>
+
+
+<!-- ホームへ戻る -->
+<button class="home-button" onclick="location.href='index.html'">
+🏠 ホームへ戻る
+</button>
+
+<button
+    class="search-reset-button"
+    id="searchResetButton"
+>
+🔄 全件表示に戻す
+</button>
+
+<!-- 登録案件一覧 -->
+<table class="list-table">
+
+<thead>
+
+<tr>
+<th>案件番号</th>
+<th>案件名</th>
+<th>AD日</th>
+<th>状態</th>
+<th>編集</th>
+<th>削除</th>
+</tr>
+
+</thead>
+
+<tbody id="auditionList">
+</tbody>
+
+</table>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
