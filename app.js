@@ -59,7 +59,7 @@ async function testSupabaseConnection() {
    新しいオーディションを保存
 ================================= */
 
-function saveAudition() {
+async function saveAudition() {
 
     const caseNumber =
         document.getElementById("caseNumber").value.trim();
@@ -91,41 +91,42 @@ function saveAudition() {
     }
 
 
-    const auditions =
-        JSON.parse(
-            localStorage.getItem("auditions") || "[]"
-        );
+    const { error } = await fetch(
+        "https://wnfuyczwuptkwicpullu.supabase.co/rest/v1/auditions",
+        {
+            method: "POST",
 
+            headers: {
+                "Content-Type": "application/json",
+                "apikey": SUPABASE_KEY,
+                "Authorization": "Bearer " + SUPABASE_KEY,
+                "Prefer": "return=minimal"
+            },
 
-    const newAudition = {
-
-        caseNumber: caseNumber,
-
-        caseName: caseName,
-
-        auditionDate:
-            dateUnknown ? "" : auditionDate,
-
-        dateUnknown: dateUnknown,
-
-        status: status
-    };
-
-
-    auditions.push(newAudition);
-
-
-    localStorage.setItem(
-        "auditions",
-        JSON.stringify(auditions)
+            body: JSON.stringify({
+                case_number: caseNumber,
+                case_name: caseName,
+                audition_date:
+                    dateUnknown ? null : auditionDate,
+                date_unknown: dateUnknown,
+                status: status
+            })
+        }
     );
 
 
-    alert("保存しました。");
+    if (!error) {
+        alert("Supabaseに保存しました。");
+        location.href = "list.html";
+        return;
+    }
 
-    location.href = "list.html";
+
+    alert(
+        "Supabaseへの保存に失敗しました。\n" +
+        "エラー内容を確認してください。"
+    );
 }
-
 
 /* =================================
    状態を表示用に変換
@@ -208,7 +209,7 @@ function renderAuditionList() {
         return;
     }
 
-
+function saveAudition()
     auditions.forEach(function(audition, index) {
 
         const dateText =
