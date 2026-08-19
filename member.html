@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>REPOS - ご確認用</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+/* =================================
+   REPOS 所属者用画面
+================================= */
+
+.member-container {
+    width: 90%;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.member-container h1 {
+    text-align: center;
+}
+
+.member-container h2 {
+    text-align: center;
+}
+
+.member-description {
+    text-align: center;
+    line-height: 1.7;
+    margin: 15px auto 25px;
+}
+
+
+/* =================================
+   検索部分
+================================= */
+
+.member-search-area {
+    width: 100%;
+    text-align: center;
+    margin: 0 auto 25px;
+}
+
+
+/* 案件番号入力 */
+
+.member-search-area input[type="text"] {
+    width: 160px;
+    max-width: 160px;
+    height: 44px;
+    margin: 0 auto 12px;
+    display: block;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 18px;
+}
+
+
+/* 検索ボタン */
+
+.member-search-area .search-button {
+    display: block;
+    width: 160px;
+    margin: 0 auto;
+}
+
+
+/* =================================
+   検索結果
+================================= */
+
+.member-result {
+    width: 100%;
+    max-width: 500px;
+    margin: 25px auto;
+    box-sizing: border-box;
+}
+
+
+/* 案件情報タイトル */
+
+.member-result h3 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+
+/* =================================
+   案件情報の箱
+================================= */
+
+.member-info {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #cccccc;
+    border-radius: 12px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+
+/* 各項目 */
+
+.member-info > div {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eeeeee;
+    min-height: 50px;
+}
+
+
+/* 最後の線を消す */
+
+.member-info > div:last-child {
+    border-bottom: none;
+}
+
+
+/* 項目名 */
+
+.member-info strong {
+    width: 120px;
+    flex-shrink: 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+
+/* 内容 */
+
+.member-info span {
+    flex: 1;
+    text-align: center;
+    padding: 10px 8px;
+    box-sizing: border-box;
+}
+
+
+/* =================================
+   メッセージ
+================================= */
+
+.member-message {
+    text-align: center;
+    margin: 20px auto;
+    line-height: 1.7;
+}
+
+
+/* =================================
+   スマートフォン
+================================= */
+
+@media screen and (max-width: 480px) {
+
+    .member-container {
+        width: 92%;
+    }
+
+    .member-info strong {
+        width: 100px;
+        font-size: 14px;
+    }
+
+    .member-info span {
+        font-size: 14px;
+    }
+
+}
+
+/* =================================
+   案件確認ページの案内
+================================= */
+
+.member-link-guide {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 25px;
+    padding: 16px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 14px;
+    text-align: center;
+}
+
+.member-link-title {
+    font-weight: bold;
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+.member-link-text {
+    font-size: 14px;
+    line-height: 1.7;
+}
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container member-container">
+
+<h1>🌸 REPOS 🌸</h1>
+
+<h2>ご確認用</h2>
+<div class="member-link-guide">
+
+    <div class="member-link-title">
+        🌸 案件の状況はこちらから確認できます
+    </div>
+
+    <div class="member-link-text">
+        案件番号を入力して、現在の状況をご確認ください。
+    </div>
+
+</div>
+
+<div class="member-search-area">
+
+<input
+type="text"
+id="memberCaseNumber"
+maxlength="4"
+placeholder="0001"
+>
+
+<button
+type="button"
+class="search-button"
+onclick="searchMemberCase()"
+>
+🔍 検索
+</button>
+
+</div>
+
+
+<div
+id="memberResult"
+class="member-result"
+style="display:none;"
+>
+</div>
+
+
+<div
+id="memberMessage"
+class="member-message"
+>
+</div>
+
+</div>
+
+
+<script>
+
+/* =================================
+   REPOS 所属者用 案件検索
+================================= */
+
+function searchMemberCase() {
+
+    const searchNumber =
+        document.getElementById(
+            "memberCaseNumber"
+        ).value.trim();
+
+
+    const result =
+        document.getElementById(
+            "memberResult"
+        );
+
+
+    const message =
+        document.getElementById(
+            "memberMessage"
+        );
+
+
+    /* 前回の結果を消す */
+
+    result.style.display = "none";
+
+    result.innerHTML = "";
+
+    message.textContent = "";
+
+
+    /* 案件番号未入力 */
+
+    if (searchNumber === "") {
+
+        message.textContent =
+            "案件番号を入力してください。";
+
+        return;
+    }
+
+
+    /* 保存されている案件データ */
+
+    const auditions =
+        JSON.parse(
+            localStorage.getItem(
+                "auditions"
+            ) || "[]"
+        );
+
+
+    /* 案件番号で検索 */
+
+    const audition =
+        auditions.find(
+            function(item) {
+
+                return (
+                    item.caseNumber ===
+                    searchNumber
+                );
+
+            }
+        );
+
+
+    /* 見つからない場合 */
+
+    if (!audition) {
+
+        message.textContent =
+            "該当する案件がありません。";
+
+        return;
+    }
+
+
+    /* =================================
+       状態を表示
+    ================================= */
+
+    let statusText =
+        audition.status || "";
+
+
+    if (
+        audition.status ===
+        "書類選考中"
+    ) {
+
+        statusText =
+            "🟡 書類選考中";
+
+    }
+
+
+    if (
+        audition.status ===
+        "書類選考終了"
+    ) {
+
+        statusText =
+            "🟥 書類選考終了";
+
+    }
+
+
+    if (
+        audition.status ===
+        "AD結果待ち"
+    ) {
+
+        statusText =
+            "🟢 AD結果待ち";
+
+    }
+
+
+    if (
+        audition.status ===
+        "AD選考終了"
+    ) {
+
+        statusText =
+            "🟦 AD選考終了";
+
+    }
+
+
+    /* =================================
+       AD日
+    ================================= */
+
+    let dateText = "未定";
+
+
+    if (
+        !audition.dateUnknown &&
+        audition.auditionDate
+    ) {
+
+        dateText =
+            audition.auditionDate.replace(
+                /-/g,
+                "/"
+            );
+
+    }
+
+
+    /* =================================
+       検索結果を表示
+    ================================= */
+
+    result.innerHTML = `
+
+        <h3>📋 案件情報</h3>
+
+        <div class="member-info">
+
+            <div>
+
+                <strong>
+                    案件番号
+                </strong>
+
+                <span>
+                    ${audition.caseNumber}
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    案件名
+                </strong>
+
+                <span>
+                    ${audition.caseName || ""}
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    AD日
+                </strong>
+
+                <span>
+                    ${dateText}
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    現在の状況
+                </strong>
+
+                <span>
+                    ${statusText}
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    result.style.display = "block";
+
+}
+
+</script>
+</body>
+</html>
+
+

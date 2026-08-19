@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>REPOS（ルポ）</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🌸 REPOS（ルポ）🌸</h1>
+
+<h2>管理者ホーム</h2>
+
+<div class="menu">
+
+<!-- ① 本日のオーディション -->
+<div
+class="today-audition-box"
+onclick="location.href='today.html'"
+>
+
+<div class="today-title">
+⭐ 本日のオーディション
+</div>
+
+<div class="today-count">
+<span id="todayCount">0</span>件
+</div>
+
+</div>
+
+
+<!-- ② 明日のオーディション -->
+<div
+class="card"
+onclick="location.href='tomorrow.html'"
+>
+
+⭐ 明日のオーディション
+<span id="tomorrowCount">0</span>件
+
+</div>
+
+
+<!-- ③ 3日前の入力確認 -->
+<div
+class="card"
+id="inputCheckNotice"
+onclick="location.href='check.html'"
+style="display:none;"
+>
+
+🔔 入力確認のお知らせ
+<span id="inputCheckCount">0</span>件
+
+</div>
+
+
+<!-- ④ 新しいオーディション登録 -->
+<button
+class="new-audition-button"
+onclick="location.href='admin.html'"
+>
+
+➕ 新しいオーディションを登録
+
+</button>
+
+
+<!-- ⑤ 登録済み案件一覧 -->
+<button
+class="new-audition-button"
+onclick="location.href='list.html'"
+>
+
+📋 登録済み案件一覧
+
+</button>
+
+
+</div>
+
+</div>
+
+
+<script src="app.js"></script>
+
+
+<style>
+
+.today-audition-box {
+    width: 90%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 18px;
+    border: 1px solid #cccccc;
+    border-radius: 12px;
+    background: #ffffff;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.today-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.today-count {
+    font-size: 18px;
+}
+
+.today-audition-box:hover {
+    opacity: 0.8;
+}
+
+</style>
+
+
+</body>
+
+</html>
