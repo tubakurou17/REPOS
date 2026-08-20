@@ -209,7 +209,6 @@ function renderAuditionList() {
         return;
     }
 
-function saveAudition()
     auditions.forEach(function(audition, index) {
 
         const dateText =
