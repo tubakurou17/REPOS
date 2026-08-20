@@ -247,13 +247,17 @@ async function renderAuditionList() {
             const row = document.createElement("tr");
 
             row.innerHTML = `
-                <td>${audition.case_number || ""}</td>
-                <td>${audition.case_name || ""}</td>
-                <td>${dateText}</td>
-                <td>${statusText}</td>
-                <td></td>
-                <td></td>
-            `;
+    <td>${audition.case_number || ""}</td>
+    <td>${audition.case_name || ""}</td>
+    <td>${dateText}</td>
+    <td>${statusText}</td>
+    <td></td>
+    <td>
+        <button onclick="deleteAudition(${audition.id})">
+            🗑️
+        </button>
+    </td>
+`;
 
             list.appendChild(row);
 
@@ -280,105 +284,50 @@ async function renderAuditionList() {
    
 
 
-    const auditions =
-        JSON.parse(
-            localStorage.getItem("auditions") || "[]"
-        );
-
-
-    list.innerHTML = "";
-
-
-    if (auditions.length === 0) {
-
-        list.innerHTML = `
-            <tr>
-                <td colspan="6">
-                    登録されている案件はありません
-                </td>
-            </tr>
-        `;
-
-        return;
-    }
-
-    auditions.forEach(function(audition, index) {
-
-        const dateText =
-            getDateText(audition);
-
-        const statusText =
-            getStatusText(audition.status);
-
-
-        const row =
-            document.createElement("tr");
-
-
-        row.innerHTML = `
-            <td>${audition.caseNumber}</td>
-
-            <td>${audition.caseName || ""}</td>
-
-            <td>${dateText}</td>
-
-            <td>${statusText}</td>
-
-            <td>
-                <button
-                    onclick="editAudition(${index})"
-                >
-                    📝
-                </button>
-            </td>
-
-            <td>
-                <button
-                    onclick="deleteAudition(${index})"
-                >
-                    🗑️
-                </button>
-            </td>
-        `;
-
-
-        list.appendChild(row);
-
-    });
-}
-
+    
+     
 
 /* =================================
    案件削除
 ================================= */
 
-function deleteAudition(index) {
+async function deleteAudition(id) {
 
-    if (
-        !confirm(
-            "この案件を削除しますか？"
-        )
-    ) {
+    if (!confirm("この案件を削除しますか？")) {
         return;
     }
 
+    try {
 
-    const auditions =
-        JSON.parse(
-            localStorage.getItem("auditions") || "[]"
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/auditions?id=eq." + id,
+            {
+                method: "DELETE",
+                headers: {
+                    "apikey": SUPABASE_KEY
+                }
+            }
         );
 
+        if (!response.ok) {
+            throw new Error("案件の削除に失敗しました");
+        }
 
-    auditions.splice(index, 1);
+        alert("案件を削除しました。");
 
+        renderAuditionList();
 
-    localStorage.setItem(
-        "auditions",
-        JSON.stringify(auditions)
-    );
+    } catch (error) {
 
+        console.error(
+            "案件削除エラー:",
+            error
+        );
 
-    renderAuditionList();
+        alert(
+            "案件の削除に失敗しました。"
+        );
+    }
 }
 
 
