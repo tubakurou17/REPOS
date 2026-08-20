@@ -14,17 +14,16 @@ const SUPABASE_KEY =
 async function testSupabaseConnection() {
 
     try {
-
-        const response = await fetch(
-            SUPABASE_URL + "/rest/v1/auditions?select=*",
-            {
-                method: "GET",
-
-                headers: {
-                    "apikey": SUPABASE_KEY,
-       }
-       }
-       );
+const response = await fetch(
+    SUPABASE_URL + "/rest/v1/auditions?select=*",
+    {
+        method: "GET",
+        headers: {
+            "apikey": SUPABASE_KEY
+        }
+    }
+);
+        
 
         if (!response.ok) {
 
