@@ -172,15 +172,112 @@ function getDateText(audition) {
    登録案件一覧
 ================================= */
 
-function renderAuditionList() {
+async function renderAuditionList() {
 
-    const list =
-        document.getElementById("auditionList");
-
+    const list = document.getElementById("auditionList");
 
     if (!list) {
         return;
     }
+
+    try {
+
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/auditions?select=*",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_KEY
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("案件一覧の取得に失敗しました。");
+        }
+
+        const auditions = await response.json();
+
+        list.innerHTML = "";
+
+        if (auditions.length === 0) {
+
+            list.innerHTML = `
+                <tr>
+                    <td colspan="6">
+                        登録されている案件はありません
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        auditions.forEach(function(audition) {
+
+            let dateText = "不明";
+
+            if (
+                !audition.date_unknown &&
+                audition.audition_date
+            ) {
+                dateText =
+                    audition.audition_date.replace(/-/g, "/");
+            }
+
+            let statusText =
+                audition.status || "";
+
+            if (audition.status === "書類選考中") {
+                statusText = "🟡 書類選考中";
+            }
+
+            if (audition.status === "書類選考終了") {
+                statusText = "🟥 書類選考終了";
+            }
+
+            if (audition.status === "AD結果待ち") {
+                statusText = "🟢 AD結果待ち";
+            }
+
+            if (audition.status === "AD選考終了") {
+                statusText = "🟦 AD選考終了";
+            }
+
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${audition.case_number || ""}</td>
+                <td>${audition.case_name || ""}</td>
+                <td>${dateText}</td>
+                <td>${statusText}</td>
+                <td></td>
+                <td></td>
+            `;
+
+            list.appendChild(row);
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "案件一覧取得エラー:",
+            error
+        );
+
+        list.innerHTML = `
+            <tr>
+                <td colspan="6">
+                    案件一覧の取得に失敗しました
+                </td>
+            </tr>
+        `;
+    }
+}
+
+   
+   
 
 
     const auditions =
