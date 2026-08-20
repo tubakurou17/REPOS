@@ -22,8 +22,9 @@ async function testSupabaseConnection() {
 
                 headers: {
                     "apikey": SUPABASE_KEY,
-                 }
-        );
+       }
+       }
+       );
 
         if (!response.ok) {
 
