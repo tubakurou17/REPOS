@@ -91,7 +91,7 @@ async function saveAudition() {
     }
 
 
-    const { error } = await fetch(
+    const response = await fetch( 
         "https://wnfuyczwuptkwicpullu.supabase.co/rest/v1/auditions",
         {
             method: "POST",
@@ -115,7 +115,7 @@ async function saveAudition() {
     );
 
 
-    if (!error) {
+    if (response.ok) {
         alert("Supabaseに保存しました。");
         location.href = "list.html";
         return;
