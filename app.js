@@ -330,139 +330,209 @@ async function deleteAudition(id) {
     }
 }
 
-
 /* =================================
-   編集
+   案件編集
+   Supabaseから案件を取得
 ================================= */
 
-function editAudition(index) {
+async function editAudition(id) {
 
-    const auditions =
-        JSON.parse(
-            localStorage.getItem("auditions") || "[]"
+    try {
+
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/auditions?id=eq." +
+            encodeURIComponent(id) +
+            "&select=*",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_KEY
+                }
+            }
         );
 
+        if (!response.ok) {
+            throw new Error(
+                "編集する案件の取得に失敗しました。"
+            );
+        }
 
-    const audition =
-        auditions[index];
+        const auditions =
+            await response.json();
 
+        if (auditions.length === 0) {
 
-    if (!audition) {
+            alert(
+                "編集する案件が見つかりません。"
+            );
+
+            return;
+        }
+
+        /*
+         * 編集する案件のIDを保存
+         */
+
+        localStorage.setItem(
+            "editingAuditionId",
+            id
+        );
+
+        location.href = "edit.html";
+
+    } catch (error) {
+
+        console.error(
+            "編集案件取得エラー:",
+            error
+        );
 
         alert(
-            "編集する案件が見つかりません。"
+            "編集する案件の取得に失敗しました。"
         );
-
-        return;
     }
-
-
-    localStorage.setItem(
-        "editingAuditionIndex",
-        index
-    );
-
-
-    location.href = "edit.html";
 }
+
 
 
 /* =================================
    3日前の入力確認
+   Supabaseから取得
 ================================= */
 
-function checkThreeDaysBefore() {
-
-    const auditions =
-        JSON.parse(
-            localStorage.getItem("auditions") || "[]"
-        );
-
-
-    const today = new Date();
-
-    today.setHours(0, 0, 0, 0);
-
-
-    const targetDate =
-        new Date(today);
-
-    targetDate.setDate(
-        today.getDate() + 3
-    );
-
-
-    let count = 0;
-
-
-    auditions.forEach(function(audition) {
-
-        if (audition.dateUnknown) {
-            return;
-        }
-
-
-        if (!audition.auditionDate) {
-            return;
-        }
-
-
-        const auditionDate =
-            new Date(
-                audition.auditionDate
-            );
-
-
-        auditionDate.setHours(
-            0, 0, 0, 0
-        );
-
-
-        if (
-            auditionDate.getTime() ===
-            targetDate.getTime()
-        ) {
-
-            count++;
-        }
-
-    });
-
+async function checkThreeDaysBefore() {
 
     const notice =
-        document.getElementById(
-            "inputCheckCount"
-        );
-
-
-    if (notice) {
-
-        notice.textContent =
-            count;
-    }
-
+        document.getElementById("inputCheckCount");
 
     const noticeArea =
-        document.getElementById(
-            "inputCheckNotice"
+        document.getElementById("inputCheckNotice");
+
+    try {
+
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/auditions?select=*",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_KEY
+                }
+            }
         );
 
+        if (!response.ok) {
+            throw new Error(
+                "3日前の案件取得に失敗しました。"
+            );
+        }
 
-    if (noticeArea) {
+        const auditions =
+            await response.json();
 
-        if (count > 0) {
+        const today = new Date();
 
-            noticeArea.style.display =
-                "block";
+        today.setHours(0, 0, 0, 0);
 
-        } else {
+        const targetDate =
+            new Date(today);
 
+        targetDate.setDate(
+            today.getDate() + 3
+        );
+
+        let count = 0;
+
+        auditions.forEach(function(audition) {
+
+            /*
+             * オーディション日不明は対象外
+             */
+
+            if (audition.date_unknown) {
+                return;
+            }
+
+            if (!audition.audition_date) {
+                return;
+            }
+
+            const auditionDate =
+                new Date(
+                    audition.audition_date
+                );
+
+            auditionDate.setHours(
+                0, 0, 0, 0
+            );
+
+            /*
+             * オーディション3日前なら
+             * 入力確認の対象
+             */
+
+            if (
+                auditionDate.getTime() ===
+                targetDate.getTime()
+            ) {
+                count++;
+            }
+
+        });
+
+        /*
+         * 件数を表示
+         */
+
+        if (notice) {
+            notice.textContent = count;
+        }
+
+        /*
+         * 0件なら非表示
+         * 1件以上なら表示
+         */
+
+        if (noticeArea) {
+
+            if (count > 0) {
+
+                noticeArea.style.display =
+                    "block";
+
+            } else {
+
+                noticeArea.style.display =
+                    "none";
+            }
+        }
+
+        console.log(
+            "🌸 3日前の入力確認：",
+            count,
+            "件"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "3日前の入力確認エラー:",
+            error
+        );
+
+        /*
+         * エラー時は
+         * 通知を誤表示しない
+         */
+
+        if (noticeArea) {
             noticeArea.style.display =
                 "none";
         }
+
     }
 }
-
 
 /* =================================
    明日のオーディション
@@ -591,278 +661,297 @@ function renderTomorrowAuditions() {
 
 /* =================================
    3日前の案件一覧
+   Supabaseから取得
 ================================= */
 
-function renderCheckList() {
+async function renderCheckList() {
 
     const list =
-        document.getElementById(
-            "checkList"
-        );
-
+        document.getElementById("checkList");
 
     if (!list) {
         return;
     }
 
+    try {
 
-    const auditions =
-        JSON.parse(
-            localStorage.getItem("auditions") || "[]"
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/auditions?select=*&order=audition_date.asc",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_KEY
+                }
+            }
         );
 
+        if (!response.ok) {
+            throw new Error(
+                "3日前の案件取得に失敗しました。"
+            );
+        }
 
-    const today = new Date();
+        const auditions =
+            await response.json();
 
-    today.setHours(0, 0, 0, 0);
+        const today = new Date();
 
+        today.setHours(0, 0, 0, 0);
 
-    const targetDate =
-        new Date(today);
+        const targetDate =
+            new Date(today);
 
-    targetDate.setDate(
-        today.getDate() + 3
-    );
+        targetDate.setDate(
+            today.getDate() + 3
+        );
 
+        const checkAuditions =
+            auditions.filter(function(audition) {
 
-    const checkAuditions =
-        auditions.filter(function(audition) {
+                if (
+                    audition.date_unknown ||
+                    !audition.audition_date
+                ) {
+                    return false;
+                }
 
-            if (audition.dateUnknown) {
-                return false;
-            }
+                const auditionDate =
+                    new Date(
+                        audition.audition_date
+                    );
 
-
-            if (!audition.auditionDate) {
-                return false;
-            }
-
-
-            const auditionDate =
-                new Date(
-                    audition.auditionDate
+                auditionDate.setHours(
+                    0, 0, 0, 0
                 );
 
+                return (
+                    auditionDate.getTime() ===
+                    targetDate.getTime()
+                );
 
-            auditionDate.setHours(
-                0, 0, 0, 0
-            );
+            });
 
+        list.innerHTML = "";
 
-            return (
-                auditionDate.getTime() ===
-                targetDate.getTime()
-            );
+        if (
+            checkAuditions.length === 0
+        ) {
 
-        });
+            list.innerHTML = `
+                <div class="no-audition">
+                    入力確認が必要な案件はありません
+                </div>
+            `;
 
+            return;
+        }
 
-    list.innerHTML = "";
+        checkAuditions.forEach(
+            function(audition) {
 
+                const item =
+                    document.createElement("div");
 
-    if (
-        checkAuditions.length === 0
-    ) {
+                item.className =
+                    "tomorrow-item";
+
+                item.innerHTML = `
+
+                    <div class="tomorrow-number">
+                        案件番号：
+                        ${audition.case_number || ""}
+                    </div>
+
+                    <div class="tomorrow-name">
+                        ${audition.case_name || "案件名未入力"}
+                    </div>
+
+                    <div class="tomorrow-status">
+                        AD日：
+                        ${audition.audition_date.replace(/-/g, "/")}
+                    </div>
+
+                    <div class="tomorrow-status">
+                        ${getStatusText(audition.status)}
+                    </div>
+
+                `;
+
+                list.appendChild(item);
+
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "3日前の案件取得エラー:",
+            error
+        );
 
         list.innerHTML = `
             <div class="no-audition">
-                入力確認が必要な案件はありません
+                入力確認案件の取得に失敗しました
             </div>
         `;
-
-        return;
     }
-
-
-    checkAuditions.forEach(
-        function(audition) {
-
-            const item =
-                document.createElement("div");
-
-
-            item.className =
-                "tomorrow-item";
-
-
-            item.innerHTML = `
-
-                <div class="tomorrow-number">
-                    案件番号：${audition.caseNumber}
-                </div>
-
-                <div class="tomorrow-name">
-                    ${audition.caseName || "案件名未入力"}
-                </div>
-
-                <div class="tomorrow-status">
-                    AD日：
-                    ${audition.auditionDate.replace(/-/g, "/")}
-                </div>
-
-                <div class="tomorrow-status">
-                    ${getStatusText(audition.status)}
-                </div>
-
-            `;
-
-
-            list.appendChild(item);
-
-        }
-    );
 }
-
 
 /* =================================
    本日のオーディション
+   Supabaseから取得
 ================================= */
 
-function renderTodayAuditions() {
+async function renderTodayAuditions() {
 
     const list =
-        document.getElementById(
-            "todayList"
-        );
-
+        document.getElementById("todayList");
 
     if (!list) {
         return;
     }
 
+    try {
 
-    const auditions =
-        JSON.parse(
-            localStorage.getItem("auditions") || "[]"
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/auditions?select=*&order=audition_date.asc",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_KEY
+                }
+            }
         );
 
+        if (!response.ok) {
+            throw new Error(
+                "本日のオーディション取得に失敗しました。"
+            );
+        }
 
-    const today = new Date();
+        const auditions =
+            await response.json();
 
-    today.setHours(0, 0, 0, 0);
+        const today = new Date();
 
+        today.setHours(0, 0, 0, 0);
 
-    const todayAuditions =
-        auditions.filter(function(audition) {
+        const todayAuditions =
+            auditions.filter(function(audition) {
 
-            if (audition.dateUnknown) {
-                return false;
-            }
+                if (
+                    audition.date_unknown ||
+                    !audition.audition_date
+                ) {
+                    return false;
+                }
 
+                const auditionDate =
+                    new Date(
+                        audition.audition_date
+                    );
 
-            if (!audition.auditionDate) {
-                return false;
-            }
-
-
-            const auditionDate =
-                new Date(
-                    audition.auditionDate
+                auditionDate.setHours(
+                    0, 0, 0, 0
                 );
 
+                return (
+                    auditionDate.getTime() ===
+                    today.getTime()
+                );
 
-            auditionDate.setHours(
-                0, 0, 0, 0
-            );
+            });
 
+        list.innerHTML = "";
 
-            return (
-                auditionDate.getTime() ===
-                today.getTime()
-            );
+        if (
+            todayAuditions.length === 0
+        ) {
 
-        });
+            list.innerHTML = `
+                <div class="no-audition">
+                    本日のオーディションはありません
+                </div>
+            `;
 
+            return;
+        }
 
-    list.innerHTML = "";
+        todayAuditions.forEach(
+            function(audition) {
 
+                const item =
+                    document.createElement("div");
 
-    if (
-        todayAuditions.length === 0
-    ) {
+                item.className =
+                    "tomorrow-item";
+
+                item.innerHTML = `
+
+                    <div class="tomorrow-number">
+                        案件番号：
+                        ${audition.case_number || ""}
+                    </div>
+
+                    <div class="tomorrow-name">
+                        ${audition.case_name || "案件名未入力"}
+                    </div>
+
+                    <div class="tomorrow-status">
+                        AD日：
+                        ${audition.audition_date.replace(/-/g, "/")}
+                    </div>
+
+                    <div class="tomorrow-status">
+                        ${getStatusText(audition.status)}
+                    </div>
+
+                `;
+
+                list.appendChild(item);
+
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "本日のオーディション取得エラー:",
+            error
+        );
 
         list.innerHTML = `
             <div class="no-audition">
-                本日のオーディションはありません
+                本日のオーディションを取得できませんでした
             </div>
         `;
-
-        return;
     }
-
-
-    todayAuditions.forEach(
-        function(audition) {
-
-            const item =
-                document.createElement("div");
-
-
-            item.className =
-                "tomorrow-item";
-
-
-            item.innerHTML = `
-
-                <div class="tomorrow-number">
-                    案件番号：${audition.caseNumber}
-                </div>
-
-                <div class="tomorrow-name">
-                    ${audition.caseName || "案件名未入力"}
-                </div>
-
-                <div class="tomorrow-status">
-                    AD日：
-                    ${audition.auditionDate.replace(/-/g, "/")}
-                </div>
-
-                <div class="tomorrow-status">
-                    ${getStatusText(audition.status)}
-                </div>
-
-            `;
-
-
-            list.appendChild(item);
-
-        }
-    );
 }
-
-
 /* =================================
    案件番号検索
+   Supabaseから取得
 ================================= */
 
-function searchAuditions() {
+async function searchAuditions() {
 
     const searchInput =
         document.getElementById(
             "caseNumberSearch"
         );
 
-
     const list =
         document.getElementById(
             "auditionList"
         );
 
-
     if (!searchInput || !list) {
         return;
     }
 
-
     const keyword =
         searchInput.value.trim();
-
-
-    const auditions =
-        JSON.parse(
-            localStorage.getItem("auditions") || "[]"
-        );
-
 
     /* 空欄なら全件表示 */
 
@@ -873,195 +962,239 @@ function searchAuditions() {
         return;
     }
 
+    try {
 
-    const results =
-        auditions.filter(
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/auditions?case_number=eq." +
+            encodeURIComponent(keyword) +
+            "&select=*",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_KEY
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "案件検索に失敗しました。"
+            );
+        }
+
+        const results =
+            await response.json();
+
+        list.innerHTML = "";
+
+        if (results.length === 0) {
+
+            list.innerHTML = `
+                <tr>
+                    <td colspan="6">
+                        案件番号「${keyword}」は
+                        見つかりませんでした。
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        results.forEach(
             function(audition) {
 
-                return String(
-                    audition.caseNumber
-                ) === keyword;
+                let dateText = "不明";
+
+                if (
+                    !audition.date_unknown &&
+                    audition.audition_date
+                ) {
+                    dateText =
+                        audition.audition_date
+                            .replace(/-/g, "/");
+                }
+
+                const statusText =
+                    getStatusText(
+                        audition.status
+                    );
+
+                const row =
+                    document.createElement("tr");
+
+                row.innerHTML = `
+
+                    <td>
+                        ${audition.case_number || ""}
+                    </td>
+
+                    <td>
+                        ${audition.case_name || ""}
+                    </td>
+
+                    <td>
+                        ${dateText}
+                    </td>
+
+                    <td>
+                        ${statusText}
+                    </td>
+
+                    <td>
+                        <button
+                            onclick="editAudition(${audition.id})"
+                        >
+                            📝
+                        </button>
+                    </td>
+
+                    <td>
+                        <button
+                            onclick="deleteAudition(${audition.id})"
+                        >
+                            🗑️
+                        </button>
+                    </td>
+
+                `;
+
+                list.appendChild(row);
 
             }
         );
 
+    } catch (error) {
 
-    list.innerHTML = "";
-
-
-    if (results.length === 0) {
+        console.error(
+            "案件検索エラー:",
+            error
+        );
 
         list.innerHTML = `
             <tr>
                 <td colspan="6">
-                    案件番号「${keyword}」は
-                    見つかりませんでした。
+                    案件検索に失敗しました。
                 </td>
             </tr>
         `;
+    }
+}
+/* =================================
+   ホームの件数
+   Supabaseから取得
+================================= */
 
+async function updateHomeCounts() {
+
+    const todayElement =
+        document.getElementById("todayCount");
+
+    const tomorrowElement =
+        document.getElementById("tomorrowCount");
+
+    /* ホーム画面に件数表示がない場合は終了 */
+
+    if (!todayElement && !tomorrowElement) {
         return;
     }
 
+    try {
 
-    results.forEach(
-        function(audition) {
-
-            const originalIndex =
-                auditions.indexOf(audition);
-
-
-            const dateText =
-                getDateText(audition);
-
-
-            const statusText =
-                getStatusText(
-                    audition.status
-                );
-
-
-            const row =
-                document.createElement("tr");
-
-
-            row.innerHTML = `
-
-                <td>
-                    ${audition.caseNumber}
-                </td>
-
-                <td>
-                    ${audition.caseName || ""}
-                </td>
-
-                <td>
-                    ${dateText}
-                </td>
-
-                <td>
-                    ${statusText}
-                </td>
-
-                <td>
-                    <button
-                        onclick="editAudition(${originalIndex})"
-                    >
-                        📝
-                    </button>
-                </td>
-
-                <td>
-                    <button
-                        onclick="deleteAudition(${originalIndex})"
-                    >
-                        🗑️
-                    </button>
-                </td>
-
-            `;
-
-
-            list.appendChild(row);
-
-        }
-    );
-}
-
-
-/* =================================
-   ホームの件数
-================================= */
-
-function updateHomeCounts() {
-
-    const auditions =
-        JSON.parse(
-            localStorage.getItem("auditions") || "[]"
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/auditions?select=*",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_KEY
+                }
+            }
         );
 
+        if (!response.ok) {
+            throw new Error(
+                "オーディション件数の取得に失敗しました。"
+            );
+        }
 
-    const today = new Date();
+        const auditions =
+            await response.json();
 
-    today.setHours(0, 0, 0, 0);
+        const today = new Date();
 
+        today.setHours(0, 0, 0, 0);
 
-    const tomorrow =
-        new Date(today);
+        const tomorrow =
+            new Date(today);
 
-    tomorrow.setDate(
-        today.getDate() + 1
-    );
+        tomorrow.setDate(
+            today.getDate() + 1
+        );
 
+        let todayCount = 0;
+        let tomorrowCount = 0;
 
-    let todayCount = 0;
-    let tomorrowCount = 0;
-
-
-    auditions.forEach(
-        function(audition) {
+        auditions.forEach(function(audition) {
 
             if (
-                audition.dateUnknown ||
-                !audition.auditionDate
+                audition.date_unknown ||
+                !audition.audition_date
             ) {
                 return;
             }
 
-
             const auditionDate =
                 new Date(
-                    audition.auditionDate
+                    audition.audition_date
                 );
-
 
             auditionDate.setHours(
                 0, 0, 0, 0
             );
 
-
             if (
                 auditionDate.getTime() ===
                 today.getTime()
             ) {
-
                 todayCount++;
             }
-
 
             if (
                 auditionDate.getTime() ===
                 tomorrow.getTime()
             ) {
-
                 tomorrowCount++;
             }
 
+        });
+
+        if (todayElement) {
+            todayElement.textContent =
+                todayCount;
         }
-    );
 
+        if (tomorrowElement) {
+            tomorrowElement.textContent =
+                tomorrowCount;
+        }
 
-    const todayElement =
-        document.getElementById(
-            "todayCount"
+        console.log(
+            "🌸 今日:",
+            todayCount,
+            "件 / 明日:",
+            tomorrowCount,
+            "件"
         );
 
+    } catch (error) {
 
-    if (todayElement) {
-        todayElement.textContent =
-            todayCount;
-    }
-
-
-    const tomorrowElement =
-        document.getElementById(
-            "tomorrowCount"
+        console.error(
+            "ホーム件数取得エラー:",
+            error
         );
 
-
-    if (tomorrowElement) {
-        tomorrowElement.textContent =
-            tomorrowCount;
     }
 }
 
