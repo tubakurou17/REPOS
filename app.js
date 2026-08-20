@@ -6,7 +6,7 @@ const SUPABASE_URL =
     "https://wnfuyczwuptkwicpullu.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_tJYjnFCgcvUII28F8sGKLQ_aRcwntH2"
+  "sb_publishable_tJYjnFCgcvUII28F8sGKLQ_aRcwntH2_"
 /* =================================
    REPOS × Supabase 接続確認
 ================================= */
