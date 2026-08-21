@@ -404,7 +404,7 @@ document.querySelector(
             );
 
 
-    if (!response.ok) {
+   if (!response.ok) {
 
     const errorText = await response.text();
 
@@ -414,9 +414,9 @@ document.querySelector(
     );
 
     throw new Error(
-        "案件の更新に失敗しました。"
+        "Supabaseエラー: " + errorText
     );
-}
+} 
 
 
 /* -----------------------------
