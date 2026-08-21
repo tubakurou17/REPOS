@@ -536,129 +536,142 @@ async function checkThreeDaysBefore() {
 
 /* =================================
    明日のオーディション
+   Supabaseから取得
 ================================= */
 
-function renderTomorrowAuditions() {
+async function renderTomorrowAuditions() {
 
     const list =
-        document.getElementById(
-            "tomorrowList"
-        );
-
+        document.getElementById("tomorrowList");
 
     if (!list) {
         return;
     }
 
+    try {
 
-    const auditions =
-        JSON.parse(
-            localStorage.getItem("auditions") || "[]"
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/auditions?select=*&order=audition_date.asc",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_KEY
+                }
+            }
         );
 
+        if (!response.ok) {
+            throw new Error(
+                "明日のオーディション取得に失敗しました。"
+            );
+        }
 
-    const today = new Date();
+        const auditions =
+            await response.json();
 
-    today.setHours(0, 0, 0, 0);
+        const today = new Date();
 
+        today.setHours(0, 0, 0, 0);
 
-    const tomorrow =
-        new Date(today);
+        const tomorrow =
+            new Date(today);
 
-    tomorrow.setDate(
-        today.getDate() + 1
-    );
+        tomorrow.setDate(
+            today.getDate() + 1
+        );
 
+        const tomorrowAuditions =
+            auditions.filter(function(audition) {
 
-    const tomorrowAuditions =
-        auditions.filter(function(audition) {
+                if (
+                    audition.date_unknown ||
+                    !audition.audition_date
+                ) {
+                    return false;
+                }
 
-            if (audition.dateUnknown) {
-                return false;
-            }
+                const auditionDate =
+                    new Date(
+                        audition.audition_date
+                    );
 
-
-            if (!audition.auditionDate) {
-                return false;
-            }
-
-
-            const auditionDate =
-                new Date(
-                    audition.auditionDate
+                auditionDate.setHours(
+                    0, 0, 0, 0
                 );
 
+                return (
+                    auditionDate.getTime() ===
+                    tomorrow.getTime()
+                );
 
-            auditionDate.setHours(
-                0, 0, 0, 0
-            );
+            });
 
+        list.innerHTML = "";
 
-            return (
-                auditionDate.getTime() ===
-                tomorrow.getTime()
-            );
+        if (
+            tomorrowAuditions.length === 0
+        ) {
 
-        });
+            list.innerHTML = `
+                <div class="no-audition">
+                    明日のオーディションはありません
+                </div>
+            `;
 
+            return;
+        }
 
-    list.innerHTML = "";
+        tomorrowAuditions.forEach(
+            function(audition) {
 
+                const item =
+                    document.createElement("div");
 
-    if (
-        tomorrowAuditions.length === 0
-    ) {
+                item.className =
+                    "tomorrow-item";
+
+                item.innerHTML = `
+
+                    <div class="tomorrow-number">
+                        案件番号：
+                        ${audition.case_number || ""}
+                    </div>
+
+                    <div class="tomorrow-name">
+                        ${audition.case_name || "案件名未入力"}
+                    </div>
+
+                    <div class="tomorrow-status">
+                        AD日：
+                        ${audition.audition_date.replace(/-/g, "/")}
+                    </div>
+
+                    <div class="tomorrow-status">
+                        ${getStatusText(audition.status)}
+                    </div>
+
+                `;
+
+                list.appendChild(item);
+
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "明日のオーディション取得エラー:",
+            error
+        );
 
         list.innerHTML = `
             <div class="no-audition">
-                明日のオーディションはありません
+                明日のオーディションを取得できませんでした
             </div>
         `;
-
-        return;
     }
-
-
-    tomorrowAuditions.forEach(
-        function(audition) {
-
-            const item =
-                document.createElement("div");
-
-
-            item.className =
-                "tomorrow-item";
-
-
-            item.innerHTML = `
-
-                <div class="tomorrow-number">
-                    案件番号：${audition.caseNumber}
-                </div>
-
-                <div class="tomorrow-name">
-                    ${audition.caseName || "案件名未入力"}
-                </div>
-
-                <div class="tomorrow-status">
-                    AD日：
-                    ${audition.auditionDate.replace(/-/g, "/")}
-                </div>
-
-                <div class="tomorrow-status">
-                    ${getStatusText(audition.status)}
-                </div>
-
-            `;
-
-
-            list.appendChild(item);
-
-        }
-    );
 }
-
-
 /* =================================
    3日前の案件一覧
    Supabaseから取得
