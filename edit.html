@@ -284,12 +284,11 @@ async function loadEditAudition() {
    変更を保存
 ================================= */
 
-document.getElementById(
-    "editForm"
+document.querySelector(
+    "#editForm button[type='button']"
 ).addEventListener(
-    "submit",
+    "click",
     async function(event) {
-
         event.preventDefault();
 
 
