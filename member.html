@@ -267,10 +267,70 @@ class="member-message"
 <script>
 
 /* =================================
-   REPOS 所属者用 案件検索
+   REPOS × Supabase
+   所属者用 案件検索
 ================================= */
 
-function searchMemberCase() {
+const SUPABASE_URL =
+    "https://wnfuyczwuptkwicpullu.supabase.co";
+
+const SUPABASE_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InduZnV5Y3p3dXB0a3dpY3B1bGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4Mzk0MzUsImV4cCI6MjEwMjQxNTQzNX0.dYyBPtW40RPLrH96K39DjmzUJGMHZedKSu-26sc-6fA";
+
+
+/* =================================
+   状態を表示用に変換
+================================= */
+
+function getMemberStatusText(status) {
+
+    if (status === "書類選考中") {
+        return "🟡 書類選考中";
+    }
+
+    if (status === "書類選考終了") {
+        return "🟥 書類選考終了";
+    }
+
+    if (status === "AD結果待ち") {
+        return "🟢 AD結果待ち";
+    }
+
+    if (status === "AD選考終了") {
+        return "🟦 AD選考終了";
+    }
+
+    return status || "";
+}
+
+
+/* =================================
+   AD日表示
+================================= */
+
+function getMemberDateText(audition) {
+
+    if (
+        !audition.date_unknown &&
+        audition.audition_date
+    ) {
+
+        return audition.audition_date.replace(
+            /-/g,
+            "/"
+        );
+
+    }
+
+    return "不明";
+}
+
+
+/* =================================
+   所属者用 案件検索
+================================= */
+
+async function searchMemberCase() {
 
     const searchNumber =
         document.getElementById(
@@ -310,182 +370,173 @@ function searchMemberCase() {
     }
 
 
-    /* 保存されている案件データ */
-
-    const auditions =
-        JSON.parse(
-            localStorage.getItem(
-                "auditions"
-            ) || "[]"
-        );
-
-
-    /* 案件番号で検索 */
-
-    const audition =
-        auditions.find(
-            function(item) {
-
-                return (
-                    item.caseNumber ===
-                    searchNumber
-                );
-
-            }
-        );
-
-
-    /* 見つからない場合 */
-
-    if (!audition) {
-
-        message.textContent =
-            "該当する案件がありません。";
-
-        return;
-    }
-
-
     /* =================================
-       状態を表示
+       Supabaseから案件番号で検索
     ================================= */
 
-    let statusText =
-        audition.status || "";
+    try {
+
+        const url =
+            SUPABASE_URL +
+            "/rest/v1/auditions" +
+            "?select=*" +
+            "&case_number=eq." +
+            encodeURIComponent(searchNumber);
 
 
-    if (
-        audition.status ===
-        "書類選考中"
-    ) {
+        const response =
+            await fetch(
+                url,
+                {
+                    method: "GET",
 
-        statusText =
-            "🟡 書類選考中";
+                    headers: {
+                        "apikey":
+                            SUPABASE_KEY,
 
-    }
-
-
-    if (
-        audition.status ===
-        "書類選考終了"
-    ) {
-
-        statusText =
-            "🟥 書類選考終了";
-
-    }
-
-
-    if (
-        audition.status ===
-        "AD結果待ち"
-    ) {
-
-        statusText =
-            "🟢 AD結果待ち";
-
-    }
-
-
-    if (
-        audition.status ===
-        "AD選考終了"
-    ) {
-
-        statusText =
-            "🟦 AD選考終了";
-
-    }
-
-
-    /* =================================
-       AD日
-    ================================= */
-
-    let dateText = "未定";
-
-
-    if (
-        !audition.dateUnknown &&
-        audition.auditionDate
-    ) {
-
-        dateText =
-            audition.auditionDate.replace(
-                /-/g,
-                "/"
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_KEY
+                    }
+                }
             );
 
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Supabaseから案件情報を取得できませんでした。"
+            );
+
+        }
+
+
+        const auditions =
+            await response.json();
+
+
+        /* =================================
+           案件が見つからない場合
+        ================================= */
+
+        if (
+            auditions.length === 0
+        ) {
+
+            message.textContent =
+                "該当する案件がありません。";
+
+            return;
+        }
+
+
+        const audition =
+            auditions[0];
+
+
+        /* =================================
+           状態
+        ================================= */
+
+        const statusText =
+            getMemberStatusText(
+                audition.status
+            );
+
+
+        /* =================================
+           AD日
+        ================================= */
+
+        const dateText =
+            getMemberDateText(
+                audition
+            );
+
+
+        /* =================================
+           検索結果表示
+        ================================= */
+
+        result.innerHTML = `
+
+            <h3>📋 案件情報</h3>
+
+            <div class="member-info">
+
+                <div>
+
+                    <strong>
+                        案件番号
+                    </strong>
+
+                    <span>
+                        ${audition.case_number || ""}
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        案件名
+                    </strong>
+
+                    <span>
+                        ${audition.case_name || ""}
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        AD日
+                    </strong>
+
+                    <span>
+                        ${dateText}
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        現在の状況
+                    </strong>
+
+                    <span>
+                        ${statusText}
+                    </span>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        result.style.display =
+            "block";
+
+
+    } catch (error) {
+
+        console.error(
+            "所属者用案件検索エラー:",
+            error
+        );
+
+
+        message.textContent =
+            "案件情報の取得に失敗しました。";
+
+
     }
-
-
-    /* =================================
-       検索結果を表示
-    ================================= */
-
-    result.innerHTML = `
-
-        <h3>📋 案件情報</h3>
-
-        <div class="member-info">
-
-            <div>
-
-                <strong>
-                    案件番号
-                </strong>
-
-                <span>
-                    ${audition.caseNumber}
-                </span>
-
-            </div>
-
-
-            <div>
-
-                <strong>
-                    案件名
-                </strong>
-
-                <span>
-                    ${audition.caseName || ""}
-                </span>
-
-            </div>
-
-
-            <div>
-
-                <strong>
-                    AD日
-                </strong>
-
-                <span>
-                    ${dateText}
-                </span>
-
-            </div>
-
-
-            <div>
-
-                <strong>
-                    現在の状況
-                </strong>
-
-                <span>
-                    ${statusText}
-                </span>
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    result.style.display = "block";
 
 }
 
