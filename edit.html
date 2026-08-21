@@ -15,6 +15,7 @@ content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
+
 <div class="container form-container">
 
 <h2>📝 案件を編集</h2>
@@ -32,6 +33,7 @@ id="editCaseNumber"
 
 <br><br>
 
+
 <label>
 案件名
 </label>
@@ -42,6 +44,7 @@ id="editCaseName"
 >
 
 <br><br>
+
 
 <label>
 オーディション日
@@ -54,15 +57,20 @@ id="editAuditionDate"
 
 <br>
 
+
 <label for="editDateUnknown">
+
 <input
 type="checkbox"
 id="editDateUnknown"
 >
+
 オーディション日未定
+
 </label>
 
 <br><br>
+
 
 <label>
 状態
@@ -90,6 +98,7 @@ AD選考終了
 
 <br><br>
 
+
 <button
 type="submit"
 class="home-button"
@@ -101,6 +110,7 @@ class="home-button"
 
 <br>
 
+
 <button
 class="home-button"
 onclick="location.href='list.html'"
@@ -111,58 +121,162 @@ onclick="location.href='list.html'"
 </div>
 
 
+<script src="app.js"></script>
+
+
 <script>
 
 /* =================================
-   REPOS 編集画面
+   REPOS
+   案件編集画面
+   Supabase対応
 ================================= */
 
-const editIndex =
-    localStorage.getItem("editingAuditionIndex");
 
-const auditions =
-    JSON.parse(
-        localStorage.getItem("auditions") || "[]"
-    );
+/*
+   app.js にある
+   SUPABASE_URL
+   SUPABASE_KEY
+   を使用します
+*/
 
-if (
-    editIndex === null ||
-    !auditions[editIndex]
-) {
 
-    alert("編集する案件が見つかりません。");
+const editingAuditionId =
+    localStorage.getItem("editingAuditionId");
 
-    location.href = "list.html";
 
-} else {
+/* =================================
+   編集する案件を取得
+================================= */
 
-    const audition =
-        auditions[editIndex];
+async function loadEditAudition() {
 
-    document.getElementById(
-        "editCaseNumber"
-    ).value =
-        audition.caseNumber || "";
+    if (!editingAuditionId) {
 
-    document.getElementById(
-        "editCaseName"
-    ).value =
-        audition.caseName || "";
+        alert("編集する案件が見つかりません。");
 
-    document.getElementById(
-        "editAuditionDate"
-    ).value =
-        audition.auditionDate || "";
+        location.href = "list.html";
 
-    document.getElementById(
-        "editDateUnknown"
-    ).checked =
-        audition.dateUnknown || false;
+        return;
+    }
 
-    document.getElementById(
-        "editStatus"
-    ).value =
-        audition.status || "書類選考中";
+
+    try {
+
+        const response = await fetch(
+
+            SUPABASE_URL +
+            "/rest/v1/auditions?id=eq." +
+            encodeURIComponent(editingAuditionId) +
+            "&select=*",
+
+            {
+                method: "GET",
+
+                headers: {
+                    "apikey": SUPABASE_KEY
+                }
+            }
+
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "案件の取得に失敗しました。"
+            );
+
+        }
+
+
+        const auditions =
+            await response.json();
+
+
+        if (auditions.length === 0) {
+
+            alert(
+                "編集する案件が見つかりません。"
+            );
+
+            localStorage.removeItem(
+                "editingAuditionId"
+            );
+
+            location.href = "list.html";
+
+            return;
+        }
+
+
+        const audition =
+            auditions[0];
+
+
+        /* -----------------------------
+           案件番号
+        ----------------------------- */
+
+        document.getElementById(
+            "editCaseNumber"
+        ).value =
+            audition.case_number || "";
+
+
+        /* -----------------------------
+           案件名
+        ----------------------------- */
+
+        document.getElementById(
+            "editCaseName"
+        ).value =
+            audition.case_name || "";
+
+
+        /* -----------------------------
+           オーディション日
+        ----------------------------- */
+
+        document.getElementById(
+            "editAuditionDate"
+        ).value =
+            audition.audition_date || "";
+
+
+        /* -----------------------------
+           オーディション日未定
+        ----------------------------- */
+
+        document.getElementById(
+            "editDateUnknown"
+        ).checked =
+            audition.date_unknown || false;
+
+
+        /* -----------------------------
+           状態
+        ----------------------------- */
+
+        document.getElementById(
+            "editStatus"
+        ).value =
+            audition.status || "書類選考中";
+
+
+    } catch (error) {
+
+        console.error(
+            "編集案件取得エラー:",
+            error
+        );
+
+        alert(
+            "編集する案件の取得に失敗しました。"
+        );
+
+        location.href = "list.html";
+    }
 }
 
 
@@ -174,35 +288,44 @@ document.getElementById(
     "editForm"
 ).addEventListener(
     "submit",
-    function(event) {
+    async function(event) {
 
         event.preventDefault();
+
 
         const caseNumber =
             document.getElementById(
                 "editCaseNumber"
             ).value.trim();
 
+
         const caseName =
             document.getElementById(
                 "editCaseName"
             ).value.trim();
+
 
         const auditionDate =
             document.getElementById(
                 "editAuditionDate"
             ).value;
 
+
         const dateUnknown =
             document.getElementById(
                 "editDateUnknown"
             ).checked;
+
 
         const status =
             document.getElementById(
                 "editStatus"
             ).value;
 
+
+        /* -----------------------------
+           案件番号チェック
+        ----------------------------- */
 
         if (caseNumber === "") {
 
@@ -213,6 +336,10 @@ document.getElementById(
             return;
         }
 
+
+        /* -----------------------------
+           オーディション日チェック
+        ----------------------------- */
 
         if (
             !dateUnknown &&
@@ -227,47 +354,105 @@ document.getElementById(
         }
 
 
-        auditions[editIndex] = {
+        try {
 
-            caseNumber:
-                caseNumber,
+            const response = await fetch(
 
-            caseName:
-                caseName,
+                SUPABASE_URL +
+                "/rest/v1/auditions?id=eq." +
+                encodeURIComponent(
+                    editingAuditionId
+                ),
 
-            auditionDate:
-                dateUnknown
-                    ? ""
-                    : auditionDate,
+                {
+                    method: "PATCH",
 
-            dateUnknown:
-                dateUnknown,
+                    headers: {
 
-            status:
-                status
+                        "apikey":
+                            SUPABASE_KEY,
 
-        };
+                        "Content-Type":
+                            "application/json",
+
+                        "Prefer":
+                            "return=minimal"
+                    },
+
+                    body: JSON.stringify({
+
+                        case_number:
+                            caseNumber,
+
+                        case_name:
+                            caseName,
+
+                        audition_date:
+                            dateUnknown
+                                ? null
+                                : auditionDate,
+
+                        date_unknown:
+                            dateUnknown,
+
+                        status:
+                            status
+
+                    })
+                }
+
+            );
 
 
-        localStorage.setItem(
-            "auditions",
-            JSON.stringify(auditions)
-        );
+            if (!response.ok) {
+
+                throw new Error(
+                    "案件の更新に失敗しました。"
+                );
+
+            }
 
 
-        localStorage.removeItem(
-            "editingAuditionIndex"
-        );
+            /* -----------------------------
+               編集IDを削除
+            ----------------------------- */
+
+            localStorage.removeItem(
+                "editingAuditionId"
+            );
 
 
-        alert("変更を保存しました。");
+            alert(
+                "変更を保存しました。"
+            );
 
 
-        location.href =
-            "list.html";
+            location.href =
+                "list.html";
+
+
+        } catch (error) {
+
+            console.error(
+                "案件更新エラー:",
+                error
+            );
+
+            alert(
+                "変更の保存に失敗しました。"
+            );
+
+        }
 
     }
 );
+
+
+/* =================================
+   編集画面を開始
+================================= */
+
+loadEditAudition();
 
 </script>
 
