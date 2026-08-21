@@ -250,13 +250,23 @@ async function renderAuditionList() {
     <td>${audition.case_number || ""}</td>
     <td>${audition.case_name || ""}</td>
     <td>${dateText}</td>
-    <td>${statusText}</td>
-    <td></td>
-    <td>
-        <button onclick="deleteAudition(${audition.id})">
-            🗑️
-        </button>
-    </td>
+   <td>${statusText}</td>
+
+<td>
+    <button
+        onclick="editAudition(${audition.id})"
+    >
+        📝
+    </button>
+</td>
+
+<td>
+    <button
+        onclick="deleteAudition(${audition.id})"
+    >
+        🗑️
+    </button>
+</td>
 `;
 
             list.appendChild(row);
