@@ -1536,3 +1536,72 @@ body {
     }
 
 }
+/* =================================
+   スマホ 登録案件一覧
+   1画面に全部表示
+================================= */
+
+@media screen and (max-width: 600px) {
+
+    /* 表を画面幅いっぱいにする */
+    .list-table {
+        width: 100% !important;
+        min-width: 0 !important;
+        table-layout: fixed !important;
+    }
+
+    /* 表の文字を小さくして省略しない */
+    .list-table th,
+    .list-table td {
+        padding: 6px 2px !important;
+        font-size: 11px !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+
+    /* 案件番号 */
+    .list-table th:nth-child(1),
+    .list-table td:nth-child(1) {
+        width: 14% !important;
+    }
+
+    /* 案件名 */
+    .list-table th:nth-child(2),
+    .list-table td:nth-child(2) {
+        width: 20% !important;
+    }
+
+    /* AD日 */
+    .list-table th:nth-child(3),
+    .list-table td:nth-child(3) {
+        width: 20% !important;
+        font-size: 10px !important;
+    }
+
+    /* 状態 */
+    .list-table th:nth-child(4),
+    .list-table td:nth-child(4) {
+        width: 24% !important;
+        font-size: 10px !important;
+    }
+
+    /* 編集 */
+    .list-table th:nth-child(5),
+    .list-table td:nth-child(5) {
+        width: 11% !important;
+    }
+
+    /* 削除 */
+    .list-table th:nth-child(6),
+    .list-table td:nth-child(6) {
+        width: 11% !important;
+    }
+
+    /* 編集・削除アイコン */
+    .list-table td:nth-child(5),
+    .list-table td:nth-child(6) {
+        font-size: 18px !important;
+    }
+
+}
