@@ -1452,3 +1452,87 @@ html,/* =================================
 body {
     overflow-x: hidden !important;
 }
+/* =================================
+   スマホ 登録案件一覧
+   横にスライドできる表
+================================= */
+
+.table-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+}
+
+/* 表はスマホ画面より少し広くする */
+.list-table {
+    min-width: 760px;
+    width: 760px;
+    table-layout: fixed;
+}
+
+/* 文字を「…」にしない */
+.list-table th,
+.list-table td {
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+/* 案件番号 */
+.list-table th:nth-child(1),
+.list-table td:nth-child(1) {
+    width: 90px;
+}
+
+/* 案件名 */
+.list-table th:nth-child(2),
+.list-table td:nth-child(2) {
+    width: 150px;
+}
+
+/* AD日 */
+.list-table th:nth-child(3),
+.list-table td:nth-child(3) {
+    width: 150px;
+}
+
+/* 状態 */
+.list-table th:nth-child(4),
+.list-table td:nth-child(4) {
+    width: 190px;
+}
+
+/* 編集 */
+.list-table th:nth-child(5),
+.list-table td:nth-child(5) {
+    width: 90px;
+}
+
+/* 削除 */
+.list-table th:nth-child(6),
+.list-table td:nth-child(6) {
+    width: 90px;
+}
+
+
+/* スマホ */
+@media screen and (max-width: 600px) {
+
+    .table-scroll {
+        display: block;
+        width: 100%;
+        overflow-x: scroll !important;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x;
+    }
+
+    .list-table {
+        min-width: 760px;
+        width: 760px;
+    }
+
+}
