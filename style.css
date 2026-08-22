@@ -1375,7 +1375,80 @@ label[for="editDateUnknown"] {
 }
 
 /* スマホの横スクロールを防止 */
-html,
+html,/* =================================
+   スマホ：登録案件一覧
+   AD日・状態を省略しない
+================================= */
+
+@media screen and (max-width: 600px) {
+
+    /* 表全体を横スクロール可能にする */
+    .list-table {
+        min-width: 760px;
+        width: 760px;
+        table-layout: fixed;
+    }
+
+    /* 案件番号 */
+    .list-table th:nth-child(1),
+    .list-table td:nth-child(1) {
+        width: 90px;
+        min-width: 90px;
+    }
+
+    /* 案件名 */
+    .list-table th:nth-child(2),
+    .list-table td:nth-child(2) {
+        width: 150px;
+        min-width: 150px;
+    }
+
+    /* AD日 */
+    .list-table th:nth-child(3),
+    .list-table td:nth-child(3) {
+        width: 150px;
+        min-width: 150px;
+    }
+
+    /* 状態 */
+    .list-table th:nth-child(4),
+    .list-table td:nth-child(4) {
+        width: 190px;
+        min-width: 190px;
+    }
+
+    /* 編集 */
+    .list-table th:nth-child(5),
+    .list-table td:nth-child(5) {
+        width: 90px;
+        min-width: 90px;
+    }
+
+    /* 削除 */
+    .list-table th:nth-child(6),
+    .list-table td:nth-child(6) {
+        width: 90px;
+        min-width: 90px;
+    }
+
+    /* 文字を「…」で省略しない */
+    .list-table th,
+    .list-table td {
+        white-space: nowrap;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    /* AD日は全部表示 */
+    .list-table td:nth-child(3) {
+        font-size: 15px;
+    }
+
+    /* 状態も全部表示 */
+    .list-table td:nth-child(4) {
+        font-size: 15px;
+    }
+}
 body {
     overflow-x: hidden !important;
 }
