@@ -634,32 +634,83 @@ overflow-x: auto;
 @media (max-width: 600px) {
 
 .search-area {
-gap: 6px;
+    gap: 6px;
 }
 
 .search-area input {
-width: 190px;
-font-size: 15px;
+    width: 190px;
+    font-size: 15px;
 }
 
 .search-area .search-button {
-width: 75px;
-font-size: 15px;
+    width: 75px;
+    font-size: 15px;
 }
 
+
+/* スマホでも一覧を画面内に表示 */
 .list-table {
-min-width: 0;
-width: 100%;
-font-size: 12px;
+    min-width: 0;
+    width: 100%;
+    table-layout: fixed;
+    font-size: 11px;
 }
 
+
+/* 文字を省略せず、全部表示 */
 .list-table th,
 .list-table td {
-padding: 5px 2px;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
+    padding: 6px 2px;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    word-break: break-word;
+    line-height: 1.3;
 }
+
+
+/* 案件番号 */
+.list-table th:nth-child(1),
+.list-table td:nth-child(1) {
+    width: 14%;
+}
+
+
+/* 案件名 */
+.list-table th:nth-child(2),
+.list-table td:nth-child(2) {
+    width: 22%;
+}
+
+
+/* AD日 */
+.list-table th:nth-child(3),
+.list-table td:nth-child(3) {
+    width: 19%;
+    word-break: normal;
+}
+
+
+/* 状態 */
+.list-table th:nth-child(4),
+.list-table td:nth-child(4) {
+    width: 25%;
+}
+
+
+/* 編集 */
+.list-table th:nth-child(5),
+.list-table td:nth-child(5) {
+    width: 10%;
+}
+
+
+/* 削除 */
+.list-table th:nth-child(6),
+.list-table td:nth-child(6) {
+    width: 10%;
+}
+
 }
 /* スマートフォン用 */
 
