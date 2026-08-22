@@ -1605,3 +1605,82 @@ body {
     }
 
 }
+/* =========================================
+   REPOS スマホ一覧 最終調整
+   6列を1画面に表示
+========================================= */
+
+@media screen and (max-width: 600px) {
+
+    .list-table {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        table-layout: fixed !important;
+        font-size: 9px !important;
+        margin: 15px 0 !important;
+    }
+
+    .list-table th,
+    .list-table td {
+        padding: 4px 1px !important;
+        font-size: 9px !important;
+        line-height: 1.2 !important;
+
+        /* 「…」を完全に解除 */
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* 案件番号 */
+    .list-table th:nth-child(1),
+    .list-table td:nth-child(1) {
+        width: 13% !important;
+    }
+
+    /* 案件名 */
+    .list-table th:nth-child(2),
+    .list-table td:nth-child(2) {
+        width: 21% !important;
+    }
+
+    /* AD日 */
+    .list-table th:nth-child(3),
+    .list-table td:nth-child(3) {
+        width: 20% !important;
+        font-size: 8px !important;
+    }
+
+    /* 状態 */
+    .list-table th:nth-child(4),
+    .list-table td:nth-child(4) {
+        width: 25% !important;
+        font-size: 8px !important;
+    }
+
+    /* 編集 */
+    .list-table th:nth-child(5),
+    .list-table td:nth-child(5) {
+        width: 10.5% !important;
+    }
+
+    /* 削除 */
+    .list-table th:nth-child(6),
+    .list-table td:nth-child(6) {
+        width: 10.5% !important;
+    }
+
+    /* 編集・削除ボタン */
+    .list-table td button {
+        width: 25px !important;
+        min-width: 25px !important;
+        height: 25px !important;
+        padding: 0 !important;
+        font-size: 14px !important;
+        margin: 0 auto !important;
+    }
+
+}
