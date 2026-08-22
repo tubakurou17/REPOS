@@ -631,8 +631,6 @@ font-size: 18px;
 .container {
 overflow-x: auto;
 }
-
-/* スマートフォン用 */
 @media (max-width: 600px) {
 
 .search-area {
@@ -650,9 +648,21 @@ font-size: 15px;
 }
 
 .list-table {
-min-width: 700px;
+min-width: 0;
+width: 100%;
+font-size: 12px;
+}
+
+.list-table th,
+.list-table td {
+padding: 5px 2px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
 }
 }
+/* スマートフォン用 */
+
 /* ホームへ戻る */
 .home-button {
 display: block;
