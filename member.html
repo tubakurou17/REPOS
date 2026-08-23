@@ -203,6 +203,64 @@ content="width=device-width, initial-scale=1.0">
     font-size: 14px;
     line-height: 1.7;
 }
+
+
+/* =================================
+   所属者用・右上の閉じるボタン
+================================= */
+
+.member-container {
+    position: relative;
+}
+
+.member-close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    width: 32px;
+    height: 32px;
+
+    padding: 0;
+    border: none;
+    background: transparent;
+
+    font-size: 22px;
+    line-height: 32px;
+    color: #777;
+
+    cursor: pointer;
+}
+
+.member-close-button:hover {
+    color: #333;
+}
+
+
+/* =================================
+   所属者用・クリア戻るボタン
+================================= */
+
+.member-clear-button {
+    display: block;
+    width: 180px;
+    margin: 15px auto;
+    padding: 10px;
+
+    font-size: 14px;
+
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: #555;
+
+    cursor: pointer;
+}
+
+.member-clear-button:hover {
+    background: #f7f7f7;
+}
 </style>
 
 </head>
@@ -268,6 +326,18 @@ id="memberMessage"
 class="member-message"
 >
 </div>
+
+
+<!-- クリア・戻る -->
+<button
+    type="button"
+    id="memberClearButton"
+    class="member-clear-button"
+    onclick="clearMemberSearch()"
+    style="display:none;"
+>
+    🔄 クリア・戻る
+</button>
 
 </div>
 
@@ -543,7 +613,48 @@ async function searchMemberCase() {
         message.textContent =
             "案件情報の取得に失敗しました。";
 
+/* =================================
+   検索結果をクリアして戻る
+================================= */
 
+function clearMemberSearch() {
+
+    document.getElementById(
+        "memberCaseNumber"
+    ).value = "";
+
+    document.getElementById(
+        "memberResult"
+    ).style.display = "none";
+
+    document.getElementById(
+        "memberResult"
+    ).innerHTML = "";
+
+    document.getElementById(
+        "memberMessage"
+    ).textContent = "";
+
+    document.getElementById(
+        "memberClearButton"
+    ).style.display = "none";
+
+    document.getElementById(
+        "memberCaseNumber"
+    ).focus();
+}
+
+
+/* =================================
+   右上の✕
+   確認機能を閉じる
+================================= */
+
+function closeMemberPage() {
+
+    window.close();
+
+}
     }
 
 }
