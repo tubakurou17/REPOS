@@ -702,18 +702,18 @@ async function searchMemberCase() {
             "block";
 
 
-    } catch (error) {
+ } catch (error) {
 
-        console.error(
-            "所属者用案件検索エラー:",
-            error
-        );
+    console.error(
+        "所属者用案件検索エラー:",
+        error
+    );
 
-        message.textContent =
-            "案件情報の取得に失敗しました。"
-            + "（通信エラー）";
+    message.textContent =
+        "検索エラー：" +
+        error.message;
 
-    }
+} 
 
 }
 
