@@ -23,6 +23,7 @@ content="width=device-width, initial-scale=1.0">
     max-width: 500px;
     margin: 0 auto;
     text-align: center;
+    position: relative;
 }
 
 .member-container h1 {
@@ -37,6 +38,39 @@ content="width=device-width, initial-scale=1.0">
     text-align: center;
     line-height: 1.7;
     margin: 15px auto 25px;
+}
+
+
+/* =================================
+   右上の閉じるボタン
+================================= */
+
+.member-close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    width: 32px;
+    height: 32px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #ffffff;
+    color: #555555;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.member-close-button:hover {
+    background: #f0f0f0;
 }
 
 
@@ -57,10 +91,15 @@ content="width=device-width, initial-scale=1.0">
     width: 160px;
     max-width: 160px;
     height: 44px;
+
     margin: 0 auto 12px;
+
     display: block;
+
     box-sizing: border-box;
+
     text-align: center;
+
     font-size: 18px;
 }
 
@@ -69,7 +108,9 @@ content="width=device-width, initial-scale=1.0">
 
 .member-search-area .search-button {
     display: block;
+
     width: 160px;
+
     margin: 0 auto;
 }
 
@@ -81,7 +122,9 @@ content="width=device-width, initial-scale=1.0">
 .member-result {
     width: 100%;
     max-width: 500px;
+
     margin: 25px auto;
+
     box-sizing: border-box;
 }
 
@@ -100,10 +143,15 @@ content="width=device-width, initial-scale=1.0">
 
 .member-info {
     width: 100%;
+
     box-sizing: border-box;
+
     border: 1px solid #cccccc;
+
     border-radius: 12px;
+
     background: #ffffff;
+
     overflow: hidden;
 }
 
@@ -112,8 +160,11 @@ content="width=device-width, initial-scale=1.0">
 
 .member-info > div {
     display: flex;
+
     align-items: center;
+
     border-bottom: 1px solid #eeeeee;
+
     min-height: 50px;
 }
 
@@ -129,8 +180,11 @@ content="width=device-width, initial-scale=1.0">
 
 .member-info strong {
     width: 120px;
+
     flex-shrink: 0;
+
     text-align: center;
+
     font-weight: bold;
 }
 
@@ -139,9 +193,47 @@ content="width=device-width, initial-scale=1.0">
 
 .member-info span {
     flex: 1;
+
     text-align: center;
+
     padding: 10px 8px;
+
     box-sizing: border-box;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =================================
+   クリア・戻るボタン
+================================= */
+
+.member-clear-button {
+    display: none;
+
+    width: 180px;
+
+    margin: 20px auto;
+
+    padding: 10px 15px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    border: 1px solid #cccccc;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #555555;
+
+    cursor: pointer;
+}
+
+.member-clear-button:hover {
+    background: #f7f7f7;
 }
 
 
@@ -151,7 +243,48 @@ content="width=device-width, initial-scale=1.0">
 
 .member-message {
     text-align: center;
+
     margin: 20px auto;
+
+    line-height: 1.7;
+}
+
+
+/* =================================
+   案件確認ページの案内
+================================= */
+
+.member-link-guide {
+    width: 100%;
+
+    max-width: 500px;
+
+    margin: 0 auto 25px;
+
+    padding: 16px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #dddddd;
+
+    border-radius: 14px;
+
+    text-align: center;
+}
+
+.member-link-title {
+    font-weight: bold;
+
+    font-size: 17px;
+
+    margin-bottom: 8px;
+}
+
+.member-link-text {
+    font-size: 14px;
+
     line-height: 1.7;
 }
 
@@ -168,6 +301,7 @@ content="width=device-width, initial-scale=1.0">
 
     .member-info strong {
         width: 100px;
+
         font-size: 14px;
     }
 
@@ -175,92 +309,14 @@ content="width=device-width, initial-scale=1.0">
         font-size: 14px;
     }
 
+    .member-clear-button {
+        width: 170px;
+
+        font-size: 15px;
+    }
+
 }
 
-/* =================================
-   案件確認ページの案内
-================================= */
-
-.member-link-guide {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto 25px;
-    padding: 16px;
-    box-sizing: border-box;
-    background: #ffffff;
-    border: 1px solid #dddddd;
-    border-radius: 14px;
-    text-align: center;
-}
-
-.member-link-title {
-    font-weight: bold;
-    font-size: 17px;
-    margin-bottom: 8px;
-}
-
-.member-link-text {
-    font-size: 14px;
-    line-height: 1.7;
-}
-
-
-/* =================================
-   所属者用・右上の閉じるボタン
-================================= */
-
-.member-container {
-    position: relative;
-}
-
-.member-close-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-
-    width: 32px;
-    height: 32px;
-
-    padding: 0;
-    border: none;
-    background: transparent;
-
-    font-size: 22px;
-    line-height: 32px;
-    color: #777;
-
-    cursor: pointer;
-}
-
-.member-close-button:hover {
-    color: #333;
-}
-
-
-/* =================================
-   所属者用・クリア戻るボタン
-================================= */
-
-.member-clear-button {
-    display: block;
-    width: 180px;
-    margin: 15px auto;
-    padding: 10px;
-
-    font-size: 14px;
-
-    border: 1px solid #cccccc;
-    border-radius: 10px;
-
-    background: #ffffff;
-    color: #555;
-
-    cursor: pointer;
-}
-
-.member-clear-button:hover {
-    background: #f7f7f7;
-}
 </style>
 
 </head>
@@ -268,76 +324,88 @@ content="width=device-width, initial-scale=1.0">
 
 <body>
 
+
 <div class="container member-container">
-<!-- 右上の閉じるボタン -->
-<button
-    type="button"
-    class="member-close-button"
-    onclick="closeMemberPage()"
-    aria-label="閉じる"
->
-    ✕
-</button>
-<h1>🌸 REPOS 🌸</h1>
 
-<h2>ご確認用</h2>
-<div class="member-link-guide">
 
-    <div class="member-link-title">
-        🌸 案件の状況はこちらから確認できます
+    <!-- 右上の閉じるボタン -->
+
+    <button
+        type="button"
+        class="member-close-button"
+        onclick="closeMemberPage()"
+        aria-label="閉じる"
+    >
+        ✕
+    </button>
+
+
+    <h1>🌸 REPOS 🌸</h1>
+
+    <h2>ご確認用</h2>
+
+
+    <div class="member-link-guide">
+
+        <div class="member-link-title">
+            🌸 案件の状況はこちらから確認できます
+        </div>
+
+        <div class="member-link-text">
+            案件番号を入力して、現在の状況をご確認ください。
+        </div>
+
     </div>
 
-    <div class="member-link-text">
-        案件番号を入力して、現在の状況をご確認ください。
+
+    <div class="member-search-area">
+
+        <input
+            type="text"
+            id="memberCaseNumber"
+            maxlength="4"
+            placeholder="0001"
+        >
+
+        <button
+            type="button"
+            class="search-button"
+            onclick="searchMemberCase()"
+        >
+            🔍 検索
+        </button>
+
     </div>
 
-</div>
 
-<div class="member-search-area">
+    <!-- 検索結果 -->
 
-<input
-type="text"
-id="memberCaseNumber"
-maxlength="4"
-placeholder="0001"
->
-
-<button
-type="button"
-class="search-button"
-onclick="searchMemberCase()"
->
-🔍 検索
-</button>
-
-</div>
+    <div
+        id="memberResult"
+        class="member-result"
+        style="display:none;"
+    >
+    </div>
 
 
-<div
-id="memberResult"
-class="member-result"
-style="display:none;"
->
-</div>
+    <!-- クリア・戻る -->
+
+    <button
+        type="button"
+        id="memberClearButton"
+        class="member-clear-button"
+        onclick="clearMemberSearch()"
+    >
+        ↩️ クリア・戻る
+    </button>
 
 
-<div
-id="memberMessage"
-class="member-message"
->
-</div>
+    <div
+        id="memberMessage"
+        class="member-message"
+    >
+    </div>
 
-
-<!-- クリア・戻る -->
-<button
-    type="button"
-    id="memberClearButton"
-    class="member-clear-button"
-    onclick="clearMemberSearch()"
-    style="display:block;"
->
-    🔄 クリア・戻る
-</button>
 
 </div>
 
@@ -353,7 +421,7 @@ const SUPABASE_URL =
     "https://wnfuyczwuptkwicpullu.supabase.co";
 
 const SUPABASE_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InduZnV5Y3p3dXB0a3dpY3B1bGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4Mzk0MzUsImV4cCI6MjEwMjQxNTQzNX0.dYyBPtW40RPLrH96K39DjmzUJGMHZedKSu-26sc-6fA";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InduZnV5Y3p3dXB0a3dpY3B1bGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4Mzk0MzUsImV4cCI6MjEwMjQxNTQzNX0.dYyBPtW40RPLhH96K39DjmzUJGMHZedKSu-26sc-6fA";
 
 
 /* =================================
@@ -428,6 +496,12 @@ async function searchMemberCase() {
         );
 
 
+    const clearButton =
+        document.getElementById(
+            "memberClearButton"
+        );
+
+
     /* 前回の結果を消す */
 
     result.style.display = "none";
@@ -435,6 +509,8 @@ async function searchMemberCase() {
     result.innerHTML = "";
 
     message.textContent = "";
+
+    clearButton.style.display = "none";
 
 
     /* 案件番号未入力 */
@@ -469,6 +545,7 @@ async function searchMemberCase() {
                     method: "GET",
 
                     headers: {
+
                         "apikey":
                             SUPABASE_KEY,
 
@@ -598,11 +675,15 @@ async function searchMemberCase() {
         `;
 
 
-        result.style.display =
-            "block";
-document.getElementById(
-    "memberClearButton"
-).style.display = "block"; 
+        /* 検索結果を表示 */
+
+        result.style.display = "block";
+
+
+        /* クリア・戻るボタンを表示 */
+
+        clearButton.style.display = "block";
+
 
     } catch (error) {
 
@@ -615,54 +696,89 @@ document.getElementById(
         message.textContent =
             "案件情報の取得に失敗しました。";
 
+    }
+
+}
+
+
 /* =================================
-   検索結果をクリアして戻る
+   クリア・戻る
 ================================= */
 
 function clearMemberSearch() {
+
+    /* 案件番号を空にする */
 
     document.getElementById(
         "memberCaseNumber"
     ).value = "";
 
+
+    /* 検索結果を消す */
+
     document.getElementById(
         "memberResult"
     ).style.display = "none";
+
 
     document.getElementById(
         "memberResult"
     ).innerHTML = "";
 
+
+    /* メッセージを消す */
+
     document.getElementById(
         "memberMessage"
     ).textContent = "";
+
+
+    /* クリアボタンを消す */
 
     document.getElementById(
         "memberClearButton"
     ).style.display = "none";
 
+
+    /* 案件番号入力欄へ戻る */
+
     document.getElementById(
         "memberCaseNumber"
     ).focus();
+
 }
 
 
 /* =================================
-   右上の✕
-   ご確認画面を終了してホームへ戻る
+   右上の ✕
+   確認画面を終了
 ================================= */
 
 function closeMemberPage() {
 
-    window.location.href = "index.html";
+    /*
+       このページへ来る前の画面へ戻る
+    */
 
-}
+    if (window.history.length > 1) {
+
+        window.history.back();
+
+    } else {
+
+        /*
+           履歴がない場合は
+           ページを閉じようとする
+        */
+
+        window.close();
+
     }
 
 }
 
 </script>
+
 </body>
+
 </html>
-
-
