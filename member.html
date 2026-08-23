@@ -247,6 +247,8 @@ content="width=device-width, initial-scale=1.0">
     margin: 20px auto;
 
     line-height: 1.7;
+
+    overflow-wrap: anywhere;
 }
 
 
@@ -301,7 +303,6 @@ content="width=device-width, initial-scale=1.0">
 
     .member-info strong {
         width: 100px;
-
         font-size: 14px;
     }
 
@@ -311,7 +312,6 @@ content="width=device-width, initial-scale=1.0">
 
     .member-clear-button {
         width: 170px;
-
         font-size: 15px;
     }
 
@@ -323,7 +323,6 @@ content="width=device-width, initial-scale=1.0">
 
 
 <body>
-
 
 <div class="container member-container">
 
@@ -557,12 +556,28 @@ async function searchMemberCase() {
             );
 
 
+        /* =================================
+           Supabaseエラーを確認
+        ================================= */
+
         if (!response.ok) {
 
-            throw new Error(
-                "Supabaseから案件情報を取得できませんでした。"
+            const errorText =
+                await response.text();
+
+            console.error(
+                "Supabase HTTPエラー:",
+                response.status,
+                errorText
             );
 
+            message.textContent =
+                "案件情報の取得に失敗しました。"
+                + "（HTTP "
+                + response.status
+                + "）";
+
+            return;
         }
 
 
@@ -677,12 +692,14 @@ async function searchMemberCase() {
 
         /* 検索結果を表示 */
 
-        result.style.display = "block";
+        result.style.display =
+            "block";
 
 
-        /* クリア・戻るボタンを表示 */
+        /* クリア・戻るを表示 */
 
-        clearButton.style.display = "block";
+        clearButton.style.display =
+            "block";
 
 
     } catch (error) {
@@ -692,9 +709,9 @@ async function searchMemberCase() {
             error
         );
 
-
         message.textContent =
-            "案件情報の取得に失敗しました。";
+            "案件情報の取得に失敗しました。"
+            + "（通信エラー）";
 
     }
 
@@ -707,14 +724,10 @@ async function searchMemberCase() {
 
 function clearMemberSearch() {
 
-    /* 案件番号を空にする */
-
     document.getElementById(
         "memberCaseNumber"
     ).value = "";
 
-
-    /* 検索結果を消す */
 
     document.getElementById(
         "memberResult"
@@ -726,21 +739,15 @@ function clearMemberSearch() {
     ).innerHTML = "";
 
 
-    /* メッセージを消す */
-
     document.getElementById(
         "memberMessage"
     ).textContent = "";
 
 
-    /* クリアボタンを消す */
-
     document.getElementById(
         "memberClearButton"
     ).style.display = "none";
 
-
-    /* 案件番号入力欄へ戻る */
 
     document.getElementById(
         "memberCaseNumber"
@@ -756,20 +763,11 @@ function clearMemberSearch() {
 
 function closeMemberPage() {
 
-    /*
-       このページへ来る前の画面へ戻る
-    */
-
     if (window.history.length > 1) {
 
         window.history.back();
 
     } else {
-
-        /*
-           履歴がない場合は
-           ページを閉じようとする
-        */
 
         window.close();
 
