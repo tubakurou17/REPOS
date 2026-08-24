@@ -34,15 +34,9 @@ content="width=device-width, initial-scale=1.0">
     text-align: center;
 }
 
-.member-description {
-    text-align: center;
-    line-height: 1.7;
-    margin: 15px auto 25px;
-}
-
 
 /* =================================
-   右上の閉じるボタン
+   右上の ✕
 ================================= */
 
 .member-close-button {
@@ -50,8 +44,8 @@ content="width=device-width, initial-scale=1.0">
     top: 5px;
     right: 5px;
 
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
 
     border: none;
     border-radius: 50%;
@@ -59,7 +53,7 @@ content="width=device-width, initial-scale=1.0">
     background: #ffffff;
     color: #555555;
 
-    font-size: 20px;
+    font-size: 21px;
     font-weight: bold;
 
     cursor: pointer;
@@ -67,10 +61,45 @@ content="width=device-width, initial-scale=1.0">
     display: flex;
     align-items: center;
     justify-content: center;
+
+    box-shadow: 0 1px 5px rgba(0,0,0,0.08);
 }
 
 .member-close-button:hover {
-    background: #f0f0f0;
+    background: #f2f2f2;
+}
+
+
+/* =================================
+   案件確認案内
+================================= */
+
+.member-link-guide {
+    width: 100%;
+    max-width: 500px;
+
+    margin: 15px auto 25px;
+    padding: 16px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #dddddd;
+    border-radius: 14px;
+
+    text-align: center;
+}
+
+.member-link-title {
+    font-weight: bold;
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+.member-link-text {
+    font-size: 14px;
+    line-height: 1.7;
 }
 
 
@@ -80,7 +109,9 @@ content="width=device-width, initial-scale=1.0">
 
 .member-search-area {
     width: 100%;
+
     text-align: center;
+
     margin: 0 auto 25px;
 }
 
@@ -88,8 +119,10 @@ content="width=device-width, initial-scale=1.0">
 /* 案件番号入力 */
 
 .member-search-area input[type="text"] {
+
     width: 160px;
     max-width: 160px;
+
     height: 44px;
 
     margin: 0 auto 12px;
@@ -107,6 +140,7 @@ content="width=device-width, initial-scale=1.0">
 /* 検索ボタン */
 
 .member-search-area .search-button {
+
     display: block;
 
     width: 160px;
@@ -120,6 +154,7 @@ content="width=device-width, initial-scale=1.0">
 ================================= */
 
 .member-result {
+
     width: 100%;
     max-width: 500px;
 
@@ -128,20 +163,20 @@ content="width=device-width, initial-scale=1.0">
     box-sizing: border-box;
 }
 
-
-/* 案件情報タイトル */
-
 .member-result h3 {
+
     text-align: center;
+
     margin-bottom: 15px;
 }
 
 
 /* =================================
-   案件情報の箱
+   案件情報
 ================================= */
 
 .member-info {
+
     width: 100%;
 
     box-sizing: border-box;
@@ -159,6 +194,7 @@ content="width=device-width, initial-scale=1.0">
 /* 各項目 */
 
 .member-info > div {
+
     display: flex;
 
     align-items: center;
@@ -169,9 +205,10 @@ content="width=device-width, initial-scale=1.0">
 }
 
 
-/* 最後の線を消す */
+/* 最後の線 */
 
 .member-info > div:last-child {
+
     border-bottom: none;
 }
 
@@ -179,6 +216,7 @@ content="width=device-width, initial-scale=1.0">
 /* 項目名 */
 
 .member-info strong {
+
     width: 120px;
 
     flex-shrink: 0;
@@ -192,6 +230,7 @@ content="width=device-width, initial-scale=1.0">
 /* 内容 */
 
 .member-info span {
+
     flex: 1;
 
     text-align: center;
@@ -204,36 +243,11 @@ content="width=device-width, initial-scale=1.0">
 }
 
 
-/* =================================
-   クリア・戻るボタン
-================================= */
+/* 状態 */
 
-.member-clear-button {
-    display: none;
-
-    width: 180px;
-
-    margin: 20px auto;
-
-    padding: 10px 15px;
-
-    font-size: 16px;
+.member-status {
 
     font-weight: bold;
-
-    border: 1px solid #cccccc;
-
-    border-radius: 10px;
-
-    background: #ffffff;
-
-    color: #555555;
-
-    cursor: pointer;
-}
-
-.member-clear-button:hover {
-    background: #f7f7f7;
 }
 
 
@@ -242,6 +256,7 @@ content="width=device-width, initial-scale=1.0">
 ================================= */
 
 .member-message {
+
     text-align: center;
 
     margin: 20px auto;
@@ -253,66 +268,49 @@ content="width=device-width, initial-scale=1.0">
 
 
 /* =================================
-   案件確認ページの案内
-================================= */
-
-.member-link-guide {
-    width: 100%;
-
-    max-width: 500px;
-
-    margin: 0 auto 25px;
-
-    padding: 16px;
-
-    box-sizing: border-box;
-
-    background: #ffffff;
-
-    border: 1px solid #dddddd;
-
-    border-radius: 14px;
-
-    text-align: center;
-}
-
-.member-link-title {
-    font-weight: bold;
-
-    font-size: 17px;
-
-    margin-bottom: 8px;
-}
-
-.member-link-text {
-    font-size: 14px;
-
-    line-height: 1.7;
-}
-
-
-/* =================================
    スマートフォン
 ================================= */
 
 @media screen and (max-width: 480px) {
 
     .member-container {
+
         width: 92%;
     }
 
     .member-info strong {
+
         width: 100px;
+
         font-size: 14px;
     }
 
     .member-info span {
+
         font-size: 14px;
     }
 
-    .member-clear-button {
-        width: 170px;
-        font-size: 15px;
+}
+
+
+/* =================================
+   スマホで画面からはみ出さない
+================================= */
+
+@media screen and (max-width: 380px) {
+
+    .member-info strong {
+
+        width: 90px;
+
+        font-size: 13px;
+    }
+
+    .member-info span {
+
+        font-size: 13px;
+
+        padding: 8px 5px;
     }
 
 }
@@ -324,89 +322,105 @@ content="width=device-width, initial-scale=1.0">
 
 <body>
 
+
 <div class="container member-container">
 
 
-    <!-- 右上の閉じるボタン -->
+<!-- =================================
+     右上の閉じる ✕
+================================= -->
 
-    <button
-        type="button"
-        class="member-close-button"
-        onclick="closeMemberPage()"
-        aria-label="閉じる"
-    >
-        ✕
-    </button>
-
-
-    <h1>🌸 REPOS 🌸</h1>
-
-    <h2>ご確認用</h2>
+<button
+    type="button"
+    class="member-close-button"
+    onclick="closeMemberPage()"
+    aria-label="閉じる"
+>
+    ✕
+</button>
 
 
-    <div class="member-link-guide">
+<h1>🌸 REPOS 🌸</h1>
 
-        <div class="member-link-title">
-            🌸 案件の状況はこちらから確認できます
-        </div>
-
-        <div class="member-link-text">
-            案件番号を入力して、現在の状況をご確認ください。
-        </div>
-
-    </div>
+<h2>ご確認用</h2>
 
 
-    <div class="member-search-area">
+<!-- =================================
+     案内
+================================= -->
 
-        <input
-            type="text"
-            id="memberCaseNumber"
-            maxlength="4"
-            placeholder="0001"
-        >
+<div class="member-link-guide">
 
-        <button
-            type="button"
-            class="search-button"
-            onclick="searchMemberCase()"
-        >
-            🔍 検索
-        </button>
+    <div class="member-link-title">
+
+        🌸 案件の状況はこちらから確認できます
 
     </div>
 
+    <div class="member-link-text">
 
-    <!-- 検索結果 -->
+        案件番号を入力して、現在の状況をご確認ください。
 
-    <div
-        id="memberResult"
-        class="member-result"
-        style="display:none;"
-    >
     </div>
 
-
-    <!-- クリア・戻る -->
-
-    <button
-        type="button"
-        id="memberClearButton"
-        class="member-clear-button"
-        onclick="clearMemberSearch()"
-    >
-        ↩️ クリア・戻る
-    </button>
+</div>
 
 
-    <div
-        id="memberMessage"
-        class="member-message"
-    >
-    </div>
+<!-- =================================
+     検索
+================================= -->
+
+<div class="member-search-area">
+
+
+<input
+    type="text"
+    id="memberCaseNumber"
+    maxlength="4"
+    inputmode="numeric"
+    placeholder="0001"
+    autocomplete="off"
+>
+
+
+<button
+    type="button"
+    class="search-button"
+    onclick="searchMemberCase()"
+>
+    🔍 検索
+</button>
 
 
 </div>
+
+
+<!-- =================================
+     検索結果
+================================= -->
+
+<div
+    id="memberResult"
+    class="member-result"
+    style="display:none;"
+>
+</div>
+
+
+<!-- =================================
+     メッセージ
+================================= -->
+
+<div
+    id="memberMessage"
+    class="member-message"
+    aria-live="polite"
+>
+</div>
+
+
+</div>
+
 
 
 <script>
@@ -416,11 +430,42 @@ content="width=device-width, initial-scale=1.0">
    所属者用 案件検索
 ================================= */
 
+
 const SUPABASE_URL =
     "https://wnfuyczwuptkwicpullu.supabase.co";
 
+
+/*
+=================================================
+★ ここだけ確認してください
+=================================================
+
+Supabase
+
+Settings
+↓
+API Keys
+↓
+Publishable key
+
+の
+
+「sb_publishable_」
+
+から始まるキーを入れてください。
+
+
+例：
+
 const SUPABASE_KEY =
-    "sb_publishable_tJYjnFCgcvUII28F8sGKLQ_aRcwntH2";
+    "sb_publishable_ここにキー";
+
+=================================================
+*/
+
+const SUPABASE_KEY =
+    "ここにsb_publishable_から始まるPublishable keyを貼り付け";
+
 
 
 /* =================================
@@ -429,24 +474,39 @@ const SUPABASE_KEY =
 
 function getMemberStatusText(status) {
 
+
     if (status === "書類選考中") {
+
         return "🟡 書類選考中";
+
     }
+
 
     if (status === "書類選考終了") {
+
         return "🟥 書類選考終了";
+
     }
+
 
     if (status === "AD結果待ち") {
+
         return "🟢 AD結果待ち";
+
     }
+
 
     if (status === "AD選考終了") {
+
         return "🟦 AD選考終了";
+
     }
 
+
     return status || "";
+
 }
+
 
 
 /* =================================
@@ -455,20 +515,53 @@ function getMemberStatusText(status) {
 
 function getMemberDateText(audition) {
 
+
     if (
+
         !audition.date_unknown &&
+
         audition.audition_date
+
     ) {
 
+
         return audition.audition_date.replace(
+
             /-/g,
+
             "/"
+
         );
 
     }
 
+
     return "不明";
+
 }
+
+
+
+/* =================================
+   HTML安全表示
+================================= */
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/'/g, "&#039;");
+
+}
+
 
 
 /* =================================
@@ -477,31 +570,43 @@ function getMemberDateText(audition) {
 
 async function searchMemberCase() {
 
-    const searchNumber =
+
+    const input =
+
         document.getElementById(
+
             "memberCaseNumber"
-        ).value.trim();
+
+        );
 
 
     const result =
+
         document.getElementById(
+
             "memberResult"
+
         );
 
 
     const message =
+
         document.getElementById(
+
             "memberMessage"
+
         );
 
 
-    const clearButton =
-        document.getElementById(
-            "memberClearButton"
-        );
+    const searchNumber =
+
+        input.value.trim();
 
 
-    /* 前回の結果を消す */
+
+    /* =================================
+       前回の結果を消す
+    ================================= */
 
     result.style.display = "none";
 
@@ -509,99 +614,180 @@ async function searchMemberCase() {
 
     message.textContent = "";
 
-    clearButton.style.display = "none";
 
 
-    /* 案件番号未入力 */
+    /* =================================
+       案件番号未入力
+    ================================= */
 
     if (searchNumber === "") {
 
         message.textContent =
+
             "案件番号を入力してください。";
 
         return;
+
     }
 
 
+
     /* =================================
-       Supabaseから案件番号で検索
+       Supabase検索
     ================================= */
 
     try {
 
+
         const url =
+
             SUPABASE_URL +
+
             "/rest/v1/auditions" +
-            "?select=*" +
+
+            "?select=case_number,case_name,audition_date,date_unknown,status" +
+
             "&case_number=eq." +
-            encodeURIComponent(searchNumber);
+
+            encodeURIComponent(
+
+                searchNumber
+
+            );
+
 
 
         const response =
+
             await fetch(
+
                 url,
+
                 {
+
                     method: "GET",
+
+                    /*
+                     * ★重要
+                     *
+                     * sb_publishable_キーは
+                     * apikeyだけに使用します。
+                     *
+                     * Authorization: Bearer は
+                     * ここでは使用しません。
+                     */
 
                     headers: {
 
                         "apikey":
-                            SUPABASE_KEY,
 
-                        "Authorization":
-                            "Bearer " +
                             SUPABASE_KEY
+
                     }
+
                 }
+
             );
 
 
+
+        const responseText =
+
+            await response.text();
+
+
+
         /* =================================
-           Supabaseエラーを確認
+           HTTPエラー
         ================================= */
 
         if (!response.ok) {
 
-            const errorText =
-                await response.text();
 
             console.error(
+
                 "Supabase HTTPエラー:",
+
                 response.status,
-                errorText
+
+                responseText
+
             );
 
-            message.textContent =
-                "案件情報の取得に失敗しました。"
-                + "（HTTP "
-                + response.status
-                + "）";
+
+            if (response.status === 401) {
+
+
+                message.textContent =
+
+                    "Supabaseの接続情報を確認してください。（HTTP 401）";
+
+
+            } else {
+
+
+                message.textContent =
+
+                    "案件情報の取得に失敗しました。（HTTP " +
+
+                    response.status +
+
+                    "）";
+
+            }
+
 
             return;
+
         }
 
-
-        const auditions =
-            await response.json();
 
 
         /* =================================
-           案件が見つからない場合
+           データ
+        ================================= */
+
+        const auditions =
+
+            responseText
+
+                ? JSON.parse(responseText)
+
+                : [];
+
+
+
+        /* =================================
+           案件なし
         ================================= */
 
         if (
+
+            !Array.isArray(auditions) ||
+
             auditions.length === 0
+
         ) {
 
+
             message.textContent =
+
                 "該当する案件がありません。";
 
             return;
+
         }
 
 
+
+        /* =================================
+           1件取得
+        ================================= */
+
         const audition =
+
             auditions[0];
+
 
 
         /* =================================
@@ -609,9 +795,13 @@ async function searchMemberCase() {
         ================================= */
 
         const statusText =
+
             getMemberStatusText(
+
                 audition.status
+
             );
+
 
 
         /* =================================
@@ -619,9 +809,13 @@ async function searchMemberCase() {
         ================================= */
 
         const dateText =
+
             getMemberDateText(
+
                 audition
+
             );
+
 
 
         /* =================================
@@ -630,130 +824,134 @@ async function searchMemberCase() {
 
         result.innerHTML = `
 
+
             <h3>📋 案件情報</h3>
+
 
             <div class="member-info">
 
+
                 <div>
 
                     <strong>
+
                         案件番号
+
                     </strong>
 
                     <span>
-                        ${audition.case_number || ""}
+
+                        ${escapeHtml(
+
+                            audition.case_number || ""
+
+                        )}
+
                     </span>
 
                 </div>
 
 
+
                 <div>
 
                     <strong>
+
                         案件名
+
                     </strong>
 
                     <span>
-                        ${audition.case_name || ""}
+
+                        ${escapeHtml(
+
+                            audition.case_name || ""
+
+                        )}
+
                     </span>
 
                 </div>
 
 
+
                 <div>
 
                     <strong>
+
                         AD日
+
                     </strong>
 
                     <span>
-                        ${dateText}
+
+                        ${escapeHtml(
+
+                            dateText
+
+                        )}
+
                     </span>
 
                 </div>
+
 
 
                 <div>
 
                     <strong>
+
                         現在の状況
+
                     </strong>
 
-                    <span>
-                        ${statusText}
+                    <span class="member-status">
+
+                        ${escapeHtml(
+
+                            statusText
+
+                        )}
+
                     </span>
 
                 </div>
+
 
             </div>
 
         `;
 
 
-        /* 検索結果を表示 */
 
         result.style.display =
+
             "block";
 
 
-        /* クリア・戻るを表示 */
-
-        clearButton.style.display =
-            "block";
+    }
 
 
- } catch (error) {
-
-    console.error(
-        "所属者用案件検索エラー:",
-        error
-    );
-
-    message.textContent =
-        "検索エラー：" +
-        error.message;
-
-} 
-
-}
+    catch (error) {
 
 
-/* =================================
-   クリア・戻る
-================================= */
+        console.error(
 
-function clearMemberSearch() {
+            "所属者用案件検索エラー:",
 
-    document.getElementById(
-        "memberCaseNumber"
-    ).value = "";
+            error
+
+        );
 
 
-    document.getElementById(
-        "memberResult"
-    ).style.display = "none";
+        message.textContent =
 
+            "検索エラーが発生しました。";
 
-    document.getElementById(
-        "memberResult"
-    ).innerHTML = "";
-
-
-    document.getElementById(
-        "memberMessage"
-    ).textContent = "";
-
-
-    document.getElementById(
-        "memberClearButton"
-    ).style.display = "none";
-
-
-    document.getElementById(
-        "memberCaseNumber"
-    ).focus();
+    }
 
 }
+
 
 
 /* =================================
@@ -763,11 +961,19 @@ function clearMemberSearch() {
 
 function closeMemberPage() {
 
-    if (window.history.length > 1) {
+
+    if (
+
+        window.history.length > 1
+
+    ) {
+
 
         window.history.back();
 
+
     } else {
+
 
         window.close();
 
@@ -775,7 +981,47 @@ function closeMemberPage() {
 
 }
 
+
+
+/* =================================
+   Enterキーでも検索
+================================= */
+
+document
+
+    .getElementById(
+
+        "memberCaseNumber"
+
+    )
+
+    .addEventListener(
+
+        "keydown",
+
+        function(event) {
+
+
+            if (
+
+                event.key === "Enter"
+
+            ) {
+
+
+                event.preventDefault();
+
+
+                searchMemberCase();
+
+            }
+
+        }
+
+    );
+
 </script>
+
 
 </body>
 
