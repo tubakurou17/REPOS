@@ -47,10 +47,6 @@
   font-size:16px;
 }
 
-.status-select{
-  font-size:16px;
-}
-
 .save-button{
   width:100%;
   padding:15px;
@@ -76,6 +72,18 @@
   font-size:13px;
   color:#666;
   margin-top:6px;
+}
+
+.unknown-date{
+  display:flex !important;
+  align-items:center;
+  gap:8px;
+  margin-top:10px;
+  font-weight:normal !important;
+}
+
+.unknown-date input{
+  width:auto !important;
 }
 
 </style>
@@ -154,7 +162,7 @@
 </select>
 
 <div class="help-text">
-案件種類は2種類から選択できます。
+2種類から選ぶだけでOKです。
 </div>
 
 </div>
@@ -186,35 +194,16 @@
 </div>
 
 
-<!-- ⑤ 状態 -->
+<!-- ⑤ 確認して保存 -->
 <div class="form-group">
 
-<label for="status">
-⑤ 状態を選択
+<label>
+⑤ 確認して保存
 </label>
 
-<select
-  id="status"
-  class="status-select"
->
-
-<option value="書類選考中" selected>
-🟡 書類選考中
-</option>
-
-<option value="書類選考終了">
-🟥 書類選考終了
-</option>
-
-<option value="AD選考終了">
-🟦 AD選考終了
-</option>
-
-</select>
-
 <div class="help-text">
-新規登録時は「🟡 書類選考中」から始まります。
-必要なときだけ変更してください。
+内容を確認して保存すれば登録完了です。<br>
+登録時の状態は自動で「🟡 書類選考中」になります。
 </div>
 
 </div>
