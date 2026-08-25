@@ -56,97 +56,177 @@ const response = await fetch(
    新しいオーディションを保存
 ================================= */
 
+/* =================================
+   新規案件を保存
+================================= */
+
 async function saveAudition() {
 
     const caseNumber =
-        document.getElementById("caseNumber").value.trim();
+        document.getElementById("caseNumber")
+        .value
+        .trim();
+
 
     const caseType =
-        document.getElementById("caseType").value;
+        document.getElementById("caseType")
+        .value;
+
 
     const auditionDate =
-        document.getElementById("auditionDate").value;
+        document.getElementById("auditionDate")
+        .value;
+
 
     const dateUnknown =
-        document.getElementById("dateUnknown").checked;
+        document.getElementById("dateUnknown")
+        .checked;
 
 
-    // 案件番号チェック
+    /* 案件番号 */
+
     if (caseNumber === "") {
-        alert("案件番号を入力してください。");
+
+        alert(
+            "案件番号を入力してください。"
+        );
+
         return;
+
     }
 
 
-    // 案件種類チェック
+    /* 案件種類 */
+
     if (caseType === "") {
-        alert("案件種類を選択してください。");
+
+        alert(
+            "案件種類を選択してください。"
+        );
+
         return;
+
     }
 
 
-    // オーディション日チェック
-    if (!dateUnknown && auditionDate === "") {
+    /* オーディション日 */
+
+    if (
+        !dateUnknown &&
+        auditionDate === ""
+    ) {
+
         alert(
             "オーディション日を入力するか、\n" +
             "「オーディション日未定」にチェックしてください。"
         );
+
         return;
+
     }
 
 
-    // 新規登録は必ず「書類選考中」
-    const status = "書類選考中";
+    /* 新規案件は必ず書類選考中 */
+
+    const status =
+        "書類選考中";
 
 
-    const response = await fetch(
-        "https://wnfuyczwuptkwicpullu.supabase.co/rest/v1/auditions",
-        {
-            method: "POST",
+    try {
 
-            headers: {
-                "Content-Type": "application/json",
-                "apikey": SUPABASE_KEY,
-                "Prefer": "return=minimal"
-            },
 
-            body: JSON.stringify({
+        const response =
+            await fetch(
 
-                case_number: caseNumber,
+                SUPABASE_URL +
+                "/rest/v1/auditions",
 
-                case_type: caseType,
+                {
 
-                audition_date:
-                    dateUnknown ? null : auditionDate,
+                    method: "POST",
 
-                date_unknown:
-                    dateUnknown,
 
-                status:
-                    status
+                    headers: {
 
-            })
+                        "Content-Type":
+                            "application/json",
+
+                        "apikey":
+                            SUPABASE_KEY,
+
+                        "Prefer":
+                            "return=minimal"
+
+                    },
+
+
+                    body:
+                        JSON.stringify({
+
+                            case_number:
+                                caseNumber,
+
+                            case_type:
+                                caseType,
+
+                            audition_date:
+                                dateUnknown
+                                ? null
+                                : auditionDate,
+
+                            date_unknown:
+                                dateUnknown,
+
+                            status:
+                                status
+
+                        })
+
+                }
+
+            );
+
+
+        if (response.ok) {
+
+            alert(
+                "Supabaseに保存しました。"
+            );
+
+            location.href =
+                "list.html";
+
+            return;
+
         }
-    );
 
 
-    if (response.ok) {
+        const errorText =
+            await response.text();
 
-        alert("Supabaseに保存しました。");
 
-        location.href = "list.html";
+        alert(
+            "保存に失敗しました。\n\n" +
+            errorText
+        );
 
-        return;
+
+    } catch (error) {
+
+
+        console.error(
+            "保存エラー:",
+            error
+        );
+
+
+        alert(
+            "保存中にエラーが発生しました。\n" +
+            "インターネット接続を確認してください。"
+        );
+
     }
 
-
-    // エラー内容を表示
-    const errorText = await response.text();
-
-    alert(
-        "Supabaseへの保存に失敗しました。\n\n" +
-        errorText
-    );
 }
 /* =================================
    状態を表示用に変換
@@ -195,7 +275,8 @@ function getDateText(audition) {
 
 async function renderAuditionList() {
 
-    const list = document.getElementById("auditionList");
+    const list =
+        document.getElementById("auditionList");
 
     if (!list) {
         return;
@@ -204,22 +285,33 @@ async function renderAuditionList() {
     try {
 
         const response = await fetch(
-            SUPABASE_URL + "/rest/v1/auditions?select=*",
+            SUPABASE_URL +
+            "/rest/v1/auditions?select=*",
             {
                 method: "GET",
+
                 headers: {
                     "apikey": SUPABASE_KEY
                 }
             }
         );
 
+
         if (!response.ok) {
-            throw new Error("案件一覧の取得に失敗しました。");
+
+            throw new Error(
+                "案件一覧の取得に失敗しました。"
+            );
+
         }
 
-        const auditions = await response.json();
+
+        const auditions =
+            await response.json();
+
 
         list.innerHTML = "";
+
 
         if (auditions.length === 0) {
 
@@ -232,167 +324,183 @@ async function renderAuditionList() {
             `;
 
             return;
+
         }
 
-        auditions.forEach(function(audition) {
 
-            let dateText = "不明";
+        auditions.forEach(
+            function(audition) {
 
-            if (
-                !audition.date_unknown &&
-                audition.audition_date
-            ) {
-                dateText =
-                    audition.audition_date.replace(/-/g, "/");
+
+                /* =========================
+                   AD日
+                ========================= */
+
+                let dateText = "不明";
+
+
+                if (
+                    !audition.date_unknown &&
+                    audition.audition_date
+                ) {
+
+                    dateText =
+                        audition.audition_date
+                        .replace(/-/g, "/");
+
+                }
+
+
+                /* =========================
+                   案件種類
+                ========================= */
+
+                let typeText =
+                    audition.case_type || "";
+
+
+                if (
+                    audition.case_type ===
+                    "映画・ドラマ・映像系"
+                ) {
+
+                    typeText =
+                        "🎬 映画・ドラマ・映像系";
+
+                }
+
+
+                if (
+                    audition.case_type ===
+                    "CM・スチール系"
+                ) {
+
+                    typeText =
+                        "📸 CM・スチール系";
+
+                }
+
+
+                /* =========================
+                   状態
+                ========================= */
+
+                let statusText =
+                    audition.status || "";
+
+
+                if (
+                    audition.status ===
+                    "書類選考中"
+                ) {
+
+                    statusText =
+                        "🟡 書類選考中";
+
+                }
+
+
+                if (
+                    audition.status ===
+                    "書類選考終了"
+                ) {
+
+                    statusText =
+                        "🟥 書類選考終了";
+
+                }
+
+
+                if (
+                    audition.status ===
+                    "AD選考終了"
+                ) {
+
+                    statusText =
+                        "🟦 AD選考終了";
+
+                }
+
+
+                const row =
+                    document.createElement("tr");
+
+
+                row.innerHTML = `
+
+                    <td>
+                        ${audition.case_number || ""}
+                    </td>
+
+
+                    <td class="type-cell">
+                        ${typeText}
+                    </td>
+
+
+                    <td>
+                        ${dateText}
+                    </td>
+
+
+                    <td>
+                        ${statusText}
+                    </td>
+
+
+                    <td>
+
+                        <button
+                            onclick="editAudition(${audition.id})"
+                        >
+                            📝
+                        </button>
+
+                    </td>
+
+
+                    <td>
+
+                        <button
+                            onclick="deleteAudition(${audition.id})"
+                        >
+                            🗑️
+                        </button>
+
+                    </td>
+
+                `;
+
+
+                list.appendChild(row);
+
             }
+        );
 
-            let statusText =
-                audition.status || "";
-
-            if (audition.status === "書類選考中") {
-                statusText = "🟡 書類選考中";
-            }
-
-            if (audition.status === "書類選考終了") {
-                statusText = "🟥 書類選考終了";
-            }
-
-            
-            if (audition.status === "AD選考終了") {
-                statusText = "🟦 AD選考終了";
-            }
-
-            const row = document.createElement("tr");
-
-            row.innerHTML = `
-    <td>${audition.case_number || ""}</td>
-    <td>${audition.case_name || ""}</td>
-    <td>${dateText}</td>
-   <td>${statusText}</td>
-
-<td>
-    <button
-        onclick="editAudition(${audition.id})"
-    >
-        📝
-    </button>
-</td>
-
-<td>
-    <button
-        onclick="deleteAudition(${audition.id})"
-    >
-        🗑️
-    </button>
-</td>
-`;
-
-            list.appendChild(row);
-
-        });
 
     } catch (error) {
+
 
         console.error(
             "案件一覧取得エラー:",
             error
         );
 
+
         list.innerHTML = `
+
             <tr>
+
                 <td colspan="6">
                     案件一覧の取得に失敗しました
                 </td>
+
             </tr>
+
         `;
-    }
-}
 
-   
-   
-
-
-    
-     
-/* =================================
-   状態を直接変更
-   🟡 書類選考中
-   🟥 書類選考終了
-   🟦 AD選考終了
-================================= */
-
-async function updateAuditionStatus(id, newStatus) {
-
-    const allowedStatuses = [
-        "書類選考中",
-        "書類選考終了",
-        "AD選考終了"
-    ];
-
-    if (!allowedStatuses.includes(newStatus)) {
-        alert("選択できない状態です。");
-        return;
     }
 
-    try {
-
-        const response = await fetch(
-            SUPABASE_URL +
-            "/rest/v1/auditions?id=eq." +
-            encodeURIComponent(id),
-            {
-                method: "PATCH",
-
-                headers: {
-                    "Content-Type": "application/json",
-                    "apikey": SUPABASE_KEY,
-                    "Authorization":
-                        "Bearer " + SUPABASE_KEY,
-                    "Prefer": "return=minimal"
-                },
-
-                body: JSON.stringify({
-                    status: newStatus
-                })
-            }
-        );
-
-        if (!response.ok) {
-
-            const errorText =
-                await response.text();
-
-            console.error(
-                "状態更新エラー:",
-                errorText
-            );
-
-            alert(
-                "状態の更新に失敗しました。"
-            );
-
-            return;
-        }
-
-        /* 一覧を更新 */
-        renderAuditionList();
-
-        /* ホームの表示も更新 */
-        renderTodayAuditions();
-        renderTomorrowAuditions();
-        updateHomeCounts();
-
-    } catch (error) {
-
-        console.error(
-            "状態更新エラー:",
-            error
-        );
-
-        alert(
-            "状態の更新に失敗しました。"
-        );
-    }
 }
 /* =================================
    案件削除
