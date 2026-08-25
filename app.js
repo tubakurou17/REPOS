@@ -99,10 +99,12 @@ async function saveAudition() {
         document.getElementById("dateUnknown");
 
 
-    if (!caseNumberElement ||
+    if (
+        !caseNumberElement ||
         !caseTypeElement ||
         !auditionDateElement ||
-        !dateUnknownElement) {
+        !dateUnknownElement
+    ) {
 
         alert(
             "入力画面の項目を確認できませんでした。\n" +
@@ -179,6 +181,8 @@ async function saveAudition() {
                 headers: {
                     "Content-Type": "application/json",
                     "apikey": SUPABASE_KEY,
+                    "Authorization":
+                        "Bearer " + SUPABASE_KEY,
                     "Prefer": "return=minimal"
                 },
 
@@ -187,7 +191,9 @@ async function saveAudition() {
                     case_number:
                         caseNumber,
 
-                    case_type:
+                    /* 現在のSupabaseでは
+                       case_name列を使用 */
+                    case_name:
                         caseType,
 
                     audition_date:
