@@ -175,20 +175,25 @@ select{
 ② 案件種類を選択
 </div>
 
-<select id="caseName">
+<select
+    id="caseType"
+    style="
+        width:100%;
+        box-sizing:border-box;
+        padding:15px;
+        border:1px solid #ddd;
+        border-radius:14px;
+        font-size:17px;
+        background:white;
+    "
+>
+    <option value="movie">
+        🎬 映画・ドラマ・映像系
+    </option>
 
-<option value="">
-案件種類を選択してください
-</option>
-
-<option value="映画・ドラマ・映像系">
-🎬 映画・ドラマ・映像系
-</option>
-
-<option value="CM・スチール系">
-📸 CM・スチール系
-</option>
-
+    <option value="cm">
+        📸 CM・スチール系
+    </option>
 </select>
 
 <div class="case-name-note">
