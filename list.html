@@ -20,7 +20,7 @@ content="width=device-width, initial-scale=1.0">
 
 .list-table{
     width:100%;
-    min-width:760px;
+    min-width:720px;
     border-collapse:collapse;
 }
 
@@ -36,36 +36,31 @@ content="width=device-width, initial-scale=1.0">
     font-weight:bold;
 }
 
-.case-name-cell{
+.type-cell{
     font-weight:bold;
-    text-align:left !important;
-    padding-left:14px !important;
-    min-width:180px;
-}
-
-.status-cell{
     white-space:nowrap;
-    font-weight:bold;
 }
 
-.edit-button,
-.delete-button{
-    border:none;
-    background:transparent;
+.status-select-list{
+    width:100%;
+    min-width:145px;
+    padding:7px 5px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    background:#fff;
+    font-size:14px;
+    font-weight:bold;
+    text-align:center;
     cursor:pointer;
-    font-size:18px;
 }
 
 </style>
 
 </head>
 
-
 <body>
 
-
 <div class="container">
-
 
 <h2>📋 登録案件一覧</h2>
 
@@ -122,7 +117,7 @@ content="width=device-width, initial-scale=1.0">
 
 <th>案件番号</th>
 
-<th>案件名</th>
+<th>案件種類</th>
 
 <th>AD日</th>
 
@@ -145,12 +140,10 @@ content="width=device-width, initial-scale=1.0">
 
 </div>
 
-
 </div>
 
 
 <script src="app.js"></script>
-
 
 </body>
 
