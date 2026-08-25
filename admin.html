@@ -2,8 +2,11 @@
 <html lang="ja">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>REPOS - 新規案件登録</title>
 
@@ -23,7 +26,7 @@
 }
 
 .form-group{
-  margin-bottom:20px;
+  margin-bottom:22px;
 }
 
 .form-group label{
@@ -94,10 +97,14 @@
 
 <div class="container form-container">
 
-<h1>🎬 REPOS（ルポ）<br>新規案件登録</h1>
+<h1>
+🎬 REPOS（ルポ）<br>
+新規案件登録
+</h1>
 
 
 <!-- ① 案件番号 -->
+
 <div class="form-group">
 
 <label for="caseNumber">
@@ -119,27 +126,12 @@
 </div>
 
 
-<!-- ② 案件名 -->
-<div class="form-group">
+<!-- ② 案件種類 -->
 
-<label for="caseName">
-② 案件名を入力
-</label>
-
-<input
-  type="text"
-  id="caseName"
-  placeholder="案件名を入力してください"
->
-
-</div>
-
-
-<!-- ③ 案件種類 -->
 <div class="form-group">
 
 <label for="caseType">
-③ 案件種類を選択
+② 案件種類を選択
 </label>
 
 <select
@@ -168,11 +160,12 @@
 </div>
 
 
-<!-- ④ オーディション日 -->
+<!-- ③ オーディション日 -->
+
 <div class="form-group">
 
 <label for="auditionDate">
-④ オーディション日
+③ オーディション日
 </label>
 
 <input
@@ -194,22 +187,8 @@
 </div>
 
 
-<!-- ⑤ 確認して保存 -->
-<div class="form-group">
-
-<label>
-⑤ 確認して保存
-</label>
-
-<div class="help-text">
-内容を確認して保存すれば登録完了です。<br>
-登録時の状態は自動で「🟡 書類選考中」になります。
-</div>
-
-</div>
-
-
 <!-- 保存 -->
+
 <button
   class="save-button"
   onclick="saveAudition()"
@@ -219,6 +198,7 @@
 
 
 <!-- ホーム -->
+
 <button
   class="home-button"
   onclick="location.href='index.html'"
