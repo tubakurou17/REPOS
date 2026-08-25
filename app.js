@@ -7,7 +7,7 @@ const SUPABASE_URL =
     "https://wnfuyczwuptkwicpullu.supabase.co";
 
 const SUPABASE_KEY =
-    "";eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InduZnV5Y3p3dXB0a3dpY3B1bGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4Mzk0MzUsImV4cCI6MjEwMjQxNTQzNX0.dYyBPtW40RPLrH96K39DjmzUJGMHZedKSu-26sc-6fA
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InduZnV5Y3p3dXB0a3dpY3B1bGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4Mzk0MzUsImV4cCI6MjEwMjQxNTQzNX0.dYyBPtW40RPLrH96K39DjmzUJGMHZedKSu-26sc-6fA";
 
 
 /* =========================================================
