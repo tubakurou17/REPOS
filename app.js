@@ -370,7 +370,86 @@ async function renderAuditionList() {
 
     
      
+/* =================================
+   状態を直接変更
+   🟡 書類選考中
+   🟥 書類選考終了
+   🟦 AD選考終了
+================================= */
 
+async function updateAuditionStatus(id, newStatus) {
+
+    const allowedStatuses = [
+        "書類選考中",
+        "書類選考終了",
+        "AD選考終了"
+    ];
+
+    if (!allowedStatuses.includes(newStatus)) {
+        alert("選択できない状態です。");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/auditions?id=eq." +
+            encodeURIComponent(id),
+            {
+                method: "PATCH",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_KEY,
+                    "Authorization":
+                        "Bearer " + SUPABASE_KEY,
+                    "Prefer": "return=minimal"
+                },
+
+                body: JSON.stringify({
+                    status: newStatus
+                })
+            }
+        );
+
+        if (!response.ok) {
+
+            const errorText =
+                await response.text();
+
+            console.error(
+                "状態更新エラー:",
+                errorText
+            );
+
+            alert(
+                "状態の更新に失敗しました。"
+            );
+
+            return;
+        }
+
+        /* 一覧を更新 */
+        renderAuditionList();
+
+        /* ホームの表示も更新 */
+        renderTodayAuditions();
+        renderTomorrowAuditions();
+        updateHomeCounts();
+
+    } catch (error) {
+
+        console.error(
+            "状態更新エラー:",
+            error
+        );
+
+        alert(
+            "状態の更新に失敗しました。"
+        );
+    }
+}
 /* =================================
    案件削除
 ================================= */
@@ -1135,9 +1214,42 @@ async function searchAuditions() {
                         ${dateText}
                     </td>
 
-                    <td>
-                        ${statusText}
-                    </td>
+                   <td>
+
+<select
+    class="status-select-list"
+    onchange="
+        updateAuditionStatus(
+            ${audition.id},
+            this.value
+        )
+    "
+>
+
+<option
+    value="書類選考中"
+    ${audition.status === "書類選考中" ? "selected" : ""}
+>
+🟡 書類選考中
+</option>
+
+<option
+    value="書類選考終了"
+    ${audition.status === "書類選考終了" ? "selected" : ""}
+>
+🟥 書類選考終了
+</option>
+
+<option
+    value="AD選考終了"
+    ${audition.status === "AD選考終了" ? "selected" : ""}
+>
+🟦 AD選考終了
+</option>
+
+</select>
+
+</td>
 
                     <td>
                         <button
