@@ -84,291 +84,174 @@ document.addEventListener(
    新規案件保存
    ========================================================= */
 
-async function saveAudition(){
+async function saveAudition() {
 
-    try{
+    const caseNumberElement =
+        document.getElementById("caseNumber");
 
-        const caseNumberElement =
-            document.getElementById(
-                "caseNumber"
-            );
+    const caseTypeElement =
+        document.getElementById("caseType");
 
-        const caseNameElement =
-            document.getElementById(
-                "caseName"
-            );
+    const auditionDateElement =
+        document.getElementById("auditionDate");
 
-        const auditionDateElement =
-            document.getElementById(
-                "auditionDate"
-            );
+    const dateUnknownElement =
+        document.getElementById("dateUnknown");
 
-        const dateUnknownElement =
-            document.getElementById(
-                "dateUnknown"
-            );
 
+    if (!caseNumberElement ||
+        !caseTypeElement ||
+        !auditionDateElement ||
+        !dateUnknownElement) {
 
-        if(!caseNumberElement){
+        alert(
+            "入力画面の項目を確認できませんでした。\n" +
+            "ページを再読み込みしてください。"
+        );
 
-            alert(
-                "案件番号の入力欄が見つかりません。"
-            );
+        return;
+    }
 
-            return;
 
-        }
+    const caseNumber =
+        caseNumberElement.value.trim();
 
+    const caseType =
+        caseTypeElement.value;
 
-        const caseNumber =
-            caseNumberElement.value.trim();
+    const auditionDate =
+        auditionDateElement.value;
 
+    const dateUnknown =
+        dateUnknownElement.checked;
 
-        const caseName =
-            caseNameElement
-                ? caseNameElement.value.trim()
-                : "";
 
+    /* 案件番号 */
 
-        const auditionDate =
-            auditionDateElement
-                ? auditionDateElement.value
-                : "";
+    if (!/^\d{4}$/.test(caseNumber)) {
 
+        alert(
+            "案件番号は4桁の数字で入力してください。\n" +
+            "例：0006、0007"
+        );
 
-        const dateUnknown =
-            dateUnknownElement
-                ? dateUnknownElement.checked
-                : false;
+        return;
+    }
 
 
-        /* -----------------------------------------
-           案件番号チェック
-           ----------------------------------------- */
+    /* 案件種類 */
 
-        if(caseNumber === ""){
+    if (caseType === "") {
 
-            alert(
-                "案件番号を入力してください。"
-            );
+        alert(
+            "案件種類を選択してください。"
+        );
 
-            return;
+        return;
+    }
 
-        }
 
+    /* オーディション日 */
 
-        if(!/^\d{4}$/.test(caseNumber)){
+    if (!dateUnknown && auditionDate === "") {
 
-            alert(
-                "案件番号は4桁の数字で入力してください。\n例：0006"
-            );
+        alert(
+            "オーディション日を入力するか、\n" +
+            "「オーディション日未定」にチェックしてください。"
+        );
 
-            return;
+        return;
+    }
 
-        }
 
+    /* 新規案件の状態 */
 
-        /* -----------------------------------------
-           案件名チェック
-           ----------------------------------------- */
+    const status = "書類選考中";
 
-        if(caseName === ""){
 
-            alert(
-                "案件名を入力してください。"
-            );
+    try {
 
-            return;
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/auditions",
+            {
+                method: "POST",
 
-        }
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_KEY,
+                    "Prefer": "return=minimal"
+                },
 
+                body: JSON.stringify({
 
-        /* -----------------------------------------
-           オーディション日チェック
-           ----------------------------------------- */
+                    case_number:
+                        caseNumber,
 
-        if(
-            !dateUnknown &&
-            auditionDate === ""
-        ){
+                    case_type:
+                        caseType,
 
-            alert(
-                "オーディション日を入力するか、\n「オーディション日未定」にチェックしてください。"
-            );
+                    audition_date:
+                        dateUnknown
+                            ? null
+                            : auditionDate,
 
-            return;
+                    date_unknown:
+                        dateUnknown,
 
-        }
+                    status:
+                        status
 
-
-        /* -----------------------------------------
-           同じ案件番号があるか確認
-           ----------------------------------------- */
-
-        const checkUrl =
-            SUPABASE_URL +
-            "/rest/v1/auditions" +
-            "?case_number=eq." +
-            encodeURIComponent(caseNumber) +
-            "&select=id";
-
-
-        const checkResponse =
-            await fetch(
-                checkUrl,
-                {
-                    method:"GET",
-                    headers:SUPABASE_HEADERS
-                }
-            );
-
-
-        if(!checkResponse.ok){
-
-            const errorText =
-                await checkResponse.text();
-
-            console.error(
-                "案件番号確認エラー:",
-                errorText
-            );
-
-            alert(
-                "案件番号の確認に失敗しました。"
-            );
-
-            return;
-
-        }
-
-
-        const existing =
-            await checkResponse.json();
-
-
-        if(existing.length > 0){
-
-            alert(
-                "この案件番号はすでに登録されています。\n別の番号を入力してください。"
-            );
-
-            return;
-
-        }
-
-
-        /* -----------------------------------------
-           新規案件は書類選考中
-           ----------------------------------------- */
-
-        const newAudition = {
-
-            case_number:
-                caseNumber,
-
-            case_name:
-                caseName,
-
-            audition_date:
-                dateUnknown
-                    ? null
-                    : auditionDate,
-
-            date_unknown:
-                dateUnknown,
-
-            status:
-                "書類選考中"
-
-        };
-
-
-        console.log(
-            "保存データ:",
-            newAudition
+                })
+            }
         );
 
 
-        /* -----------------------------------------
-           Supabaseへ保存
-           ----------------------------------------- */
-
-        const response =
-            await fetch(
-                SUPABASE_URL +
-                "/rest/v1/auditions",
-                {
-                    method:"POST",
-
-                    headers:{
-                        ...SUPABASE_HEADERS,
-
-                        "Prefer":
-                            "return=minimal"
-                    },
-
-                    body:
-                        JSON.stringify(
-                            newAudition
-                        )
-                }
-            );
-
-
-        /* -----------------------------------------
-           保存成功
-           ----------------------------------------- */
-
-        if(response.ok){
+        if (response.ok) {
 
             alert(
                 "保存しました。"
             );
 
-            location.href =
-                "list.html";
+            location.href = "list.html";
 
             return;
-
         }
 
-
-        /* -----------------------------------------
-           保存失敗
-           ----------------------------------------- */
 
         const errorText =
             await response.text();
 
+
         console.error(
             "Supabase保存エラー:",
+            response.status,
             errorText
         );
 
 
         alert(
-            "保存に失敗しました。\n\n" +
+            "保存できませんでした。\n\n" +
+            "Supabaseエラー：" +
+            response.status +
+            "\n\n" +
             errorText
         );
 
-    }
-    catch(error){
+
+    } catch (error) {
 
         console.error(
             "保存エラー:",
             error
         );
 
+
         alert(
             "保存中にエラーが発生しました。\n" +
             "インターネット接続を確認してください。"
         );
-
     }
-
 }
-
-
 /* =========================================================
    案件一覧取得
    ========================================================= */
