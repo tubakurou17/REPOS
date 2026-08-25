@@ -14,79 +14,106 @@ content="width=device-width, initial-scale=1.0">
 
 <style>
 
-.form-container{
-  max-width:600px;
-  margin:30px auto;
-  padding:25px;
+body{
+    margin:0;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        "Yu Gothic",
+        "Meiryo",
+        sans-serif;
+    background:#f7f8fc;
 }
 
-.form-container h1{
-  text-align:center;
-  margin-bottom:25px;
+.container{
+    max-width:760px;
+    margin:30px auto;
+    padding:25px;
+}
+
+.card{
+    background:white;
+    border-radius:25px;
+    padding:35px 30px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:35px;
 }
 
 .form-group{
-  margin-bottom:22px;
+    margin-bottom:28px;
 }
 
-.form-group label{
-  display:block;
-  font-weight:bold;
-  margin-bottom:8px;
+.form-title{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:10px;
+    text-align:center;
 }
 
-.form-group input,
-.form-group select{
-  width:100%;
-  box-sizing:border-box;
-  padding:14px;
-  font-size:16px;
-  border:1px solid #ddd;
-  border-radius:12px;
-  background:#fff;
+input[type="text"],
+input[type="date"]{
+    width:100%;
+    box-sizing:border-box;
+    padding:15px;
+    border:1px solid #ddd;
+    border-radius:14px;
+    font-size:17px;
+    background:white;
 }
 
-.type-select{
-  font-size:16px;
+.case-name-note{
+    text-align:center;
+    color:#777;
+    font-size:13px;
+    margin-top:7px;
+}
+
+.checkbox-area{
+    margin-top:10px;
+    font-size:15px;
+}
+
+.checkbox-area input{
+    transform:scale(1.2);
+    margin-right:8px;
+}
+
+.button-area{
+    text-align:center;
+    margin-top:30px;
+}
+
+.save-button,
+.home-button{
+    width:270px;
+    padding:15px;
+    border:none;
+    border-radius:15px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    margin:7px auto;
+    display:block;
 }
 
 .save-button{
-  width:100%;
-  padding:15px;
-  border:none;
-  border-radius:14px;
-  font-size:18px;
-  font-weight:bold;
-  cursor:pointer;
-  margin-top:10px;
+    background:#1769e0;
+    color:white;
 }
 
 .home-button{
-  width:100%;
-  padding:13px;
-  border:none;
-  border-radius:14px;
-  font-size:16px;
-  cursor:pointer;
-  margin-top:12px;
+    background:#1769e0;
+    color:white;
 }
 
-.help-text{
-  font-size:13px;
-  color:#666;
-  margin-top:6px;
-}
-
-.unknown-date{
-  display:flex !important;
-  align-items:center;
-  gap:8px;
-  margin-top:10px;
-  font-weight:normal !important;
-}
-
-.unknown-date input{
-  width:auto !important;
+.save-button:hover,
+.home-button:hover{
+    opacity:0.9;
 }
 
 </style>
@@ -95,89 +122,76 @@ content="width=device-width, initial-scale=1.0">
 
 <body>
 
-<div class="container form-container">
+<div class="container">
 
-<h1>
-🎬 REPOS（ルポ）<br>
-新規案件登録
-</h1>
+<div class="card">
+
+<h2>📋 REPOS - 新規案件登録</h2>
 
 
-<!-- ① 案件番号 -->
+<!-- 案件番号 -->
 
 <div class="form-group">
 
-<label for="caseNumber">
+<div class="form-title">
 ① 案件に番号をつける
-</label>
+</div>
 
 <input
-  type="text"
-  id="caseNumber"
-  maxlength="4"
-  inputmode="numeric"
-  placeholder="例：0001"
+    type="text"
+    id="caseNumber"
+    placeholder="例：0006"
+    maxlength="4"
 >
 
-<div class="help-text">
+<div class="case-name-note">
 4桁の案件番号を入力してください。
 </div>
 
 </div>
 
 
-<!-- ② 案件種類 -->
+<!-- 案件名 -->
 
 <div class="form-group">
 
-<label for="caseType">
-② 案件種類を選択
-</label>
+<div class="form-title">
+② 案件名を入力
+</div>
 
-<select
-  id="caseType"
-  class="type-select"
+<input
+    type="text"
+    id="caseName"
+    placeholder="例：○○映画オーディション"
 >
 
-<option value="">
-案件種類を選択してください
-</option>
-
-<option value="映画・ドラマ・映像系">
-🎬 映画・ドラマ・映像系
-</option>
-
-<option value="CM・スチール系">
-📸 CM・スチール系
-</option>
-
-</select>
-
-<div class="help-text">
-2種類から選ぶだけでOKです。
+<div class="case-name-note">
+案件名はメンバー画面にも表示されます。
 </div>
 
 </div>
 
 
-<!-- ③ オーディション日 -->
+<!-- オーディション日 -->
 
 <div class="form-group">
 
-<label for="auditionDate">
+<div class="form-title">
 ③ オーディション日
-</label>
+</div>
 
 <input
-  type="date"
-  id="auditionDate"
+    type="date"
+    id="auditionDate"
 >
 
-<label class="unknown-date">
+<div class="checkbox-area">
+
+<label>
 
 <input
-  type="checkbox"
-  id="dateUnknown"
+    type="checkbox"
+    id="dateUnknown"
 >
 
 オーディション日未定
@@ -186,25 +200,32 @@ content="width=device-width, initial-scale=1.0">
 
 </div>
 
+</div>
+
 
 <!-- 保存 -->
 
+<div class="button-area">
+
 <button
-  class="save-button"
-  onclick="saveAudition()"
+    type="button"
+    class="save-button"
+    onclick="saveAudition()"
 >
 💾 保存する
 </button>
 
-
-<!-- ホーム -->
-
 <button
-  class="home-button"
-  onclick="location.href='index.html'"
+    type="button"
+    class="home-button"
+    onclick="location.href='index.html'"
 >
 🏠 ホームへ戻る
 </button>
+
+</div>
+
+</div>
 
 </div>
 
