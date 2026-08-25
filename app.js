@@ -61,9 +61,7 @@ async function saveAudition() {
     const caseNumber =
         document.getElementById("caseNumber").value.trim();
 
-    const caseName =
-        document.getElementById("caseName").value.trim();
-
+   
     const caseType =
         document.getElementById("caseType").value;
 
@@ -137,9 +135,7 @@ async function saveAudition() {
                     case_number:
                         caseNumber,
 
-                    case_name:
-                        caseName,
-
+                   
                     case_type:
                         caseType,
 
