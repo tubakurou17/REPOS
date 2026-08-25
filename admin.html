@@ -1,11 +1,84 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>新しいオーディション登録</title>
+
+<title>REPOS - 新規案件登録</title>
 
 <link rel="stylesheet" href="style.css">
+
+<style>
+
+.form-container{
+  max-width:600px;
+  margin:30px auto;
+  padding:25px;
+}
+
+.form-container h1{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.form-group{
+  margin-bottom:20px;
+}
+
+.form-group label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.form-group input,
+.form-group select{
+  width:100%;
+  box-sizing:border-box;
+  padding:14px;
+  font-size:16px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  background:#fff;
+}
+
+.type-select{
+  font-size:16px;
+}
+
+.status-select{
+  font-size:16px;
+}
+
+.save-button{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  font-size:18px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+.home-button{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:14px;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:12px;
+}
+
+.help-text{
+  font-size:13px;
+  color:#666;
+  margin-top:6px;
+}
+
+</style>
 
 </head>
 
@@ -13,42 +86,162 @@
 
 <div class="container form-container">
 
-<h1>➕ 新しいオーディション登録</h1>
-<label>案件番号（4桁）</label>
-<input type="text" id="caseNumber" maxlength="4" placeholder="0001">
-<label>案件名</label>
-<input type="text" id="caseName" placeholder="案件名を入力">
-<div class="date-row">
+<h1>🎬 REPOS（ルポ）<br>新規案件登録</h1>
 
-<label for="auditionDate">最初のオーディション日</label>
 
-<input type="date" id="auditionDate">
+<!-- ① 案件番号 -->
+<div class="form-group">
+
+<label for="caseNumber">
+① 案件に番号をつける
+</label>
+
+<input
+  type="text"
+  id="caseNumber"
+  maxlength="4"
+  inputmode="numeric"
+  placeholder="例：0001"
+>
+
+<div class="help-text">
+4桁の案件番号を入力してください。
+</div>
+
+</div>
+
+
+<!-- ② 案件名 -->
+<div class="form-group">
+
+<label for="caseName">
+② 案件名を入力
+</label>
+
+<input
+  type="text"
+  id="caseName"
+  placeholder="案件名を入力してください"
+>
+
+</div>
+
+
+<!-- ③ 案件種類 -->
+<div class="form-group">
+
+<label for="caseType">
+③ 案件種類を選択
+</label>
+
+<select
+  id="caseType"
+  class="type-select"
+>
+
+<option value="">
+案件種類を選択してください
+</option>
+
+<option value="映画・ドラマ・映像系">
+🎬 映画・ドラマ・映像系
+</option>
+
+<option value="CM・スチール系">
+📸 CM・スチール系
+</option>
+
+</select>
+
+<div class="help-text">
+案件種類は2種類から選択できます。
+</div>
+
+</div>
+
+
+<!-- ④ オーディション日 -->
+<div class="form-group">
+
+<label for="auditionDate">
+④ オーディション日
+</label>
+
+<input
+  type="date"
+  id="auditionDate"
+>
 
 <label class="unknown-date">
-<input type="checkbox" id="dateUnknown">
+
+<input
+  type="checkbox"
+  id="dateUnknown"
+>
+
 オーディション日未定
+
 </label>
 
 </div>
 
 
-<label>現在の状況</label>
-<select id="status">
-<option value="書類選考中">🟡 書類選考中</option>
-<option value="書類選考終了">🟥 書類選考終了</option>
-<option value="AD結果待ち">🟢 AD結果待ち</option>
-<option value="AD選考終了">🟦 AD選考終了</option>
+<!-- ⑤ 状態 -->
+<div class="form-group">
+
+<label for="status">
+⑤ 状態を選択
+</label>
+
+<select
+  id="status"
+  class="status-select"
+>
+
+<option value="書類選考中" selected>
+🟡 書類選考中
+</option>
+
+<option value="書類選考終了">
+🟥 書類選考終了
+</option>
+
+<option value="AD選考終了">
+🟦 AD選考終了
+</option>
+
 </select>
 
-<button onclick="saveAudition()">
+<div class="help-text">
+新規登録時は「🟡 書類選考中」から始まります。
+必要なときだけ変更してください。
+</div>
 
+</div>
+
+
+<!-- 保存 -->
+<button
+  class="save-button"
+  onclick="saveAudition()"
+>
 💾 保存する
 </button>
 
-<button class="home-button" onclick="location.href='index.html'">
+
+<!-- ホーム -->
+<button
+  class="home-button"
+  onclick="location.href='index.html'"
+>
 🏠 ホームへ戻る
 </button>
-<hr>
+
+</div>
+
+
 <script src="app.js"></script>
+
 </body>
+
 </html>
