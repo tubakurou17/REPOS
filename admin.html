@@ -56,7 +56,8 @@ h2{
 }
 
 input[type="text"],
-input[type="date"]{
+input[type="date"],
+select{
     width:100%;
     box-sizing:border-box;
     padding:15px;
@@ -64,6 +65,10 @@ input[type="date"]{
     border-radius:14px;
     font-size:17px;
     background:white;
+}
+
+select{
+    cursor:pointer;
 }
 
 .case-name-note{
@@ -74,13 +79,24 @@ input[type="date"]{
 }
 
 .checkbox-area{
-    margin-top:10px;
+    margin-top:14px;
+    text-align:center;
     font-size:15px;
 }
 
+.checkbox-area label{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    cursor:pointer;
+}
+
 .checkbox-area input{
-    transform:scale(1.2);
-    margin-right:8px;
+    width:18px;
+    height:18px;
+    margin:0;
+    cursor:pointer;
 }
 
 .button-area{
@@ -151,22 +167,32 @@ input[type="date"]{
 </div>
 
 
-<!-- 案件名 -->
+<!-- 案件種類 -->
 
 <div class="form-group">
 
 <div class="form-title">
-② 案件名を入力
+② 案件種類を選択
 </div>
 
-<input
-    type="text"
-    id="caseName"
-    placeholder="例：○○映画オーディション"
->
+<select id="caseName">
+
+<option value="">
+案件種類を選択してください
+</option>
+
+<option value="映画・ドラマ・映像系">
+🎬 映画・ドラマ・映像系
+</option>
+
+<option value="CM・スチール系">
+📸 CM・スチール系
+</option>
+
+</select>
 
 <div class="case-name-note">
-案件名はメンバー画面にも表示されます。
+2種類から選ぶだけでOKです。
 </div>
 
 </div>
@@ -194,7 +220,7 @@ input[type="date"]{
     id="dateUnknown"
 >
 
-オーディション日未定
+<span>オーディション日未定</span>
 
 </label>
 
