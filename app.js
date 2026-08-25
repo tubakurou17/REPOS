@@ -61,69 +61,149 @@ async function saveAudition() {
     const caseNumber =
         document.getElementById("caseNumber").value.trim();
 
-    const auditionDate =
-        document.getElementById("auditionDate").value;
-
     const caseName =
         document.getElementById("caseName").value.trim();
+
+    const caseType =
+        document.getElementById("caseType").value;
+
+    const auditionDate =
+        document.getElementById("auditionDate").value;
 
     const dateUnknown =
         document.getElementById("dateUnknown").checked;
 
-    const status =
-        document.getElementById("status").value;
+    /* 新規案件は必ず「書類選考中」から開始 */
+    const status = "書類選考中";
 
 
+    /* 案件番号チェック */
     if (caseNumber === "") {
+
         alert("案件番号を入力してください。");
         return;
+
     }
 
 
+    /* 案件種類チェック */
+    if (caseType === "") {
+
+        alert("案件種類を選択してください。");
+        return;
+
+    }
+
+
+    /* オーディション日チェック */
     if (!dateUnknown && auditionDate === "") {
+
         alert(
-            "オーディション日を入力するか、「オーディション日不明」にチェックしてください。"
+            "オーディション日を入力するか、" +
+            "「オーディション日不明」にチェックしてください。"
         );
+
         return;
+
     }
 
 
-    const response = await fetch( 
-        "https://wnfuyczwuptkwicpullu.supabase.co/rest/v1/auditions",
-        {
-            method: "POST",
+    try {
 
-            headers: {
-                "Content-Type": "application/json",
-                "apikey": SUPABASE_KEY,
-                "Prefer": "return=minimal"
-            },
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/auditions",
+            {
 
-            body: JSON.stringify({
-                case_number: caseNumber,
-                case_name: caseName,
-                audition_date:
-                    dateUnknown ? null : auditionDate,
-                date_unknown: dateUnknown,
-                status: status
-            })
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json",
+
+                    "apikey":
+                        SUPABASE_KEY,
+
+                    "Authorization":
+                        "Bearer " + SUPABASE_KEY,
+
+                    "Prefer":
+                        "return=minimal"
+
+                },
+
+                body: JSON.stringify({
+
+                    case_number:
+                        caseNumber,
+
+                    case_name:
+                        caseName,
+
+                    case_type:
+                        caseType,
+
+                    audition_date:
+                        dateUnknown
+                            ? null
+                            : auditionDate,
+
+                    date_unknown:
+                        dateUnknown,
+
+                    status:
+                        status
+
+                })
+
+            }
+        );
+
+
+        if (!response.ok) {
+
+            const errorText =
+                await response.text();
+
+            console.error(
+                "Supabase保存エラー:",
+                errorText
+            );
+
+            alert(
+                "保存に失敗しました。\n" +
+                errorText
+            );
+
+            return;
+
         }
-    );
 
 
-    if (response.ok) {
-        alert("Supabaseに保存しました。");
-        location.href = "list.html";
-        return;
+        alert(
+            "案件を登録しました。\n" +
+            "🟡 書類選考中からスタートします。"
+        );
+
+
+        location.href =
+            "list.html";
+
+
+    } catch (error) {
+
+        console.error(
+            "保存エラー:",
+            error
+        );
+
+        alert(
+            "保存中にエラーが発生しました。"
+        );
+
     }
 
-
-    alert(
-        "Supabaseへの保存に失敗しました。\n" +
-        "エラー内容を確認してください。"
-    );
 }
-
 /* =================================
    状態を表示用に変換
 ================================= */
