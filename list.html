@@ -12,6 +12,61 @@ content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="style.css">
 
+<style>
+
+/* =========================
+   REPOS 状態選択
+========================= */
+
+.status-select-list {
+
+    width: 100%;
+
+    min-width: 145px;
+
+    padding: 7px 5px;
+
+    border-radius: 10px;
+
+    border: 1px solid #ddd;
+
+    background: #fff;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    text-align: center;
+
+    cursor: pointer;
+
+}
+
+.status-select-list:focus {
+
+    outline: none;
+
+}
+
+
+/* スマホでも押しやすく */
+
+@media (max-width: 600px) {
+
+    .status-select-list {
+
+        min-width: 145px;
+
+        font-size: 13px;
+
+        padding: 8px 4px;
+
+    }
+
+}
+
+</style>
+
 </head>
 
 <body>
@@ -20,7 +75,9 @@ content="width=device-width, initial-scale=1.0">
 
 <h2>📋 登録案件一覧</h2>
 
+
 <!-- 案件番号検索 -->
+
 <div class="search-area">
 
 <input
@@ -36,14 +93,20 @@ content="width=device-width, initial-scale=1.0">
 🔍 検索
 </button>
 
-
 </div>
 
 
 <!-- ホームへ戻る -->
-<button class="home-button" onclick="location.href='index.html'">
+
+<button
+    class="home-button"
+    onclick="location.href='index.html'"
+>
 🏠 ホームへ戻る
 </button>
+
+
+<!-- 全件表示 -->
 
 <button
     class="search-reset-button"
@@ -52,30 +115,48 @@ content="width=device-width, initial-scale=1.0">
 🔄 全件表示に戻す
 </button>
 
+
 <!-- 登録案件一覧 -->
+
 <div class="table-scroll">
 
-    <table class="list-table">
+<table class="list-table">
 
-        <thead>
-            <tr>
-                <th>案件番号</th>
-                <th>案件名</th>
-                <th>AD日</th>
-                <th>状態</th>
-                <th>編集</th>
-                <th>削除</th>
-            </tr>
-        </thead>
+<thead>
 
-        <tbody id="auditionList">
-        </tbody>
+<tr>
 
-    </table>
+<th>案件番号</th>
+
+<th>案件名</th>
+
+<th>AD日</th>
+
+<th>状態</th>
+
+<th>編集</th>
+
+<th>削除</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="auditionList">
+
+</tbody>
+
+
+</table>
 
 </div>
 
+</div>
+
+
 <script src="app.js"></script>
+
 
 </body>
 
