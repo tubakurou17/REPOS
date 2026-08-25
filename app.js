@@ -206,6 +206,7 @@ async function saveAudition() {
 }
 /* =================================
    状態を表示用に変換
+   REPOSは3段階
 ================================= */
 
 function getStatusText(status) {
@@ -216,10 +217,6 @@ function getStatusText(status) {
 
     if (status === "書類選考終了") {
         return "🟥 書類選考終了";
-    }
-
-    if (status === "AD結果待ち") {
-        return "🟢 AD結果待ち";
     }
 
     if (status === "AD選考終了") {
@@ -316,10 +313,7 @@ async function renderAuditionList() {
                 statusText = "🟥 書類選考終了";
             }
 
-            if (audition.status === "AD結果待ち") {
-                statusText = "🟢 AD結果待ち";
-            }
-
+            
             if (audition.status === "AD選考終了") {
                 statusText = "🟦 AD選考終了";
             }
