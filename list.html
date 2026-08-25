@@ -8,61 +8,50 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>登録案件一覧</title>
+<title>REPOS - 登録案件一覧</title>
 
 <link rel="stylesheet" href="style.css">
 
 <style>
 
-/* =========================
-   REPOS 状態選択
-========================= */
-
-.status-select-list {
-
-    width: 100%;
-
-    min-width: 145px;
-
-    padding: 7px 5px;
-
-    border-radius: 10px;
-
-    border: 1px solid #ddd;
-
-    background: #fff;
-
-    font-size: 14px;
-
-    font-weight: bold;
-
-    text-align: center;
-
-    cursor: pointer;
-
+.table-scroll{
+    overflow-x:auto;
 }
 
-.status-select-list:focus {
-
-    outline: none;
-
+.list-table{
+    width:100%;
+    min-width:720px;
+    border-collapse:collapse;
 }
 
+.list-table th,
+.list-table td{
+    padding:12px 8px;
+    text-align:center;
+    border:1px solid #ddd;
+}
 
-/* スマホでも押しやすく */
+.list-table th{
+    background:#f5f7ff;
+    font-weight:bold;
+}
 
-@media (max-width: 600px) {
+.type-cell{
+    font-weight:bold;
+    white-space:nowrap;
+}
 
-    .status-select-list {
-
-        min-width: 145px;
-
-        font-size: 13px;
-
-        padding: 8px 4px;
-
-    }
-
+.status-select-list{
+    width:100%;
+    min-width:145px;
+    padding:7px 5px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    background:#fff;
+    font-size:14px;
+    font-weight:bold;
+    text-align:center;
+    cursor:pointer;
 }
 
 </style>
@@ -96,7 +85,7 @@ content="width=device-width, initial-scale=1.0">
 </div>
 
 
-<!-- ホームへ戻る -->
+<!-- ホーム -->
 
 <button
     class="home-button"
@@ -128,7 +117,7 @@ content="width=device-width, initial-scale=1.0">
 
 <th>案件番号</th>
 
-<th>案件名</th>
+<th>案件種類</th>
 
 <th>AD日</th>
 
@@ -144,7 +133,6 @@ content="width=device-width, initial-scale=1.0">
 
 
 <tbody id="auditionList">
-
 </tbody>
 
 
@@ -156,7 +144,6 @@ content="width=device-width, initial-scale=1.0">
 
 
 <script src="app.js"></script>
-
 
 </body>
 
