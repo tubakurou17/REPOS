@@ -877,16 +877,14 @@ async function searchMemberCase() {
                     </strong>
 
 
-                    <span>
-
-                        ${escapeHtml(
-
-                            audition.case_type || ""
-
-                        )}
-
-                    </span>
-
+              <span>
+    ${audition.case_type === "cm"
+        ? "📸 CM・スチール系"
+        : audition.case_type === "movie"
+        ? "🎬 映画・ドラマ・映像系"
+        : escapeHtml(audition.case_type || "")
+    }
+</span>     
                 </div>
 
 
