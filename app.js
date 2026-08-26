@@ -515,38 +515,35 @@ function displayAuditions(data){
 
         }
 
+/* =====================================
+   状態
+   ===================================== */
 
-        /* =====================================
-           状態
-           ===================================== */
+const statusCell =
+    document.createElement("td");
 
-        const statusCell =
-            document.createElement(
-                "td"
-            );
+const select =
+    document.createElement("select");
 
-
-        const select =
-            document.createElement(
-                "select"
-            );
+select.className =
+    "status-select-list";
 
 
-        select.className =
-            "status-select-list";
+/*
+   管理者が変更できる状態は2つだけ
+
+   🟥 書類選考終了
+   🟦 AD選考終了
+
+   🟡 書類選考中は新規登録時に自動で入る。
+   現在「書類選考中」の案件だけ、
+   現在の状態として表示する。
+*/
 
 
- const statuses = [
-    "書類選考終了",
-    "AD選考終了"
-];
+/* 現在の状態 */
 
-
-/* 新規登録時の状態は
-   「書類選考中」が自動で入るため、
-   現在の状態として表示だけする */
-
-if (item.status === "書類選考中") {
+if(item.status === "書類選考中"){
 
     const currentOption =
         document.createElement("option");
@@ -560,9 +557,6 @@ if (item.status === "書類選考中") {
     currentOption.selected =
         true;
 
-    currentOption.disabled =
-        true;
-
     select.appendChild(
         currentOption
     );
@@ -570,69 +564,52 @@ if (item.status === "書類選考中") {
 }
 
 
-/* 管理者が変更できるのは2種類だけ */
+/* 選択できる状態 */
 
-statuses.forEach(function(status){
+const statuses = [
 
-    const option =
-        document.createElement("option");
+    "書類選考終了",
 
-    option.value =
-        status;
+    "AD選考終了"
 
-    option.textContent =
-        getStatusText(status);
-
-    if(item.status === status){
-
-        option.selected =
-            true;
-
-    }
-
-    select.appendChild(
-        option
-    );
-
-});
-
-        statuses.forEach(
-            function(status){
-
-                const option =
-                    document.createElement(
-                        "option"
-                    );
+];
 
 
-                option.value =
-                    status;
+statuses.forEach(
+    function(status){
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+        option.value =
+            status;
+
+        option.textContent =
+            getStatusText(status);
 
 
-                option.textContent =
-                    getStatusText(
-                        status
-                    );
+        if(item.status === status){
+
+            option.selected =
+                true;
+
+        }
 
 
-                if(
-                    item.status === status
-                ){
-
-                    option.selected =
-                        true;
-
-                }
-
-
-                select.appendChild(
-                    option
-                );
-
-            }
+        select.appendChild(
+            option
         );
 
+    }
+);
 
+
+statusCell.appendChild(
+    select
+);
+ 
         select.addEventListener(
             "change",
             function(){
