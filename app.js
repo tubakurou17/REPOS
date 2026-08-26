@@ -925,21 +925,17 @@ async function updateStatus(
    案件編集
    ========================================================= */
 
-async function editAudition(item){
+function editAudition(item){
 
-    const newName =
-        prompt(
-            "案件名を入力してください。",
-            item.case_name || ""
-        );
+    localStorage.setItem(
+        "editingAuditionId",
+        item.id
+    );
 
+    location.href =
+        "edit.html";
 
-    if(newName === null){
-
-        return;
-
-    }
-
+}
 
     if(newName.trim() === ""){
 
