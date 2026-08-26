@@ -1,247 +1,267 @@
-/* =========================================================
-   REPOS
-   Supabase 接続
-   ========================================================= */
+/* =================================
+   REPOS（ルポ） 共通 app.js
+================================= */
 
 const SUPABASE_URL =
     "https://wnfuyczwuptkwicpullu.supabase.co";
 
 const SUPABASE_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InduZnV5Y3p3dXB0a3dpY3B1bGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4Mzk0MzUsImV4cCI6MjEwMjQxNTQzNX0.dYyBPtW40RPLrH96K39DjmzUJGMHZedKSu-26sc-6fA";
+    "sb_publishable_tJYjnFCgcvUII28F8sGKLQ_aRcwntH2";
 
 
-/* =========================================================
-   Supabase 共通設定
-   ========================================================= */
+/* =================================
+   Supabase共通ヘッダー
+================================= */
 
-const SUPABASE_HEADERS = {
+function supabaseHeaders(extra = {}) {
 
-    "apikey": SUPABASE_KEY,
+    return Object.assign({
 
-    "Authorization":
-        "Bearer " + SUPABASE_KEY,
+        "apikey": SUPABASE_KEY,
 
-    "Content-Type":
-        "application/json"
+        "Authorization":
+            "Bearer " + SUPABASE_KEY
 
-};
+    }, extra);
+
+}
 
 
-/* =========================================================
-   ページ読み込み
-   ========================================================= */
+/* =================================
+   案件種類
+================================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
+function getCaseTypeText(type) {
 
-        console.log("REPOS 起動");
+    if (
+        type === "movie" ||
+        type === "映画・ドラマ・映像系"
+    ) {
 
-        /* 一覧ページなら読み込み */
-        if (
-            document.getElementById("auditionList")
-        ){
-
-            loadAuditions();
-
-        }
-
-        /* 検索ボタン */
-        const searchButton =
-            document.getElementById(
-                "searchButton"
-            );
-
-        if(searchButton){
-
-            searchButton.addEventListener(
-                "click",
-                searchAuditions
-            );
-
-        }
-
-        /* 全件表示 */
-        const resetButton =
-            document.getElementById(
-                "searchResetButton"
-            );
-
-        if(resetButton){
-
-            resetButton.addEventListener(
-                "click",
-                loadAuditions
-            );
-
-        }
+        return "🎬 映画・ドラマ・映像系";
 
     }
-);
 
 
-/* =========================================================
+    if (
+        type === "cm" ||
+        type === "CM・スチール系"
+    ) {
+
+        return "📸 CM・スチール系";
+
+    }
+
+
+    return type || "";
+
+}
+
+
+/* =================================
+   状態
+   新規登録時は書類選考中
+================================= */
+
+const STATUS_OPTIONS = [
+
+    [
+        "書類選考中",
+        "🟡 書類選考中"
+    ],
+
+    [
+        "書類選考終了",
+        "🟥 書類選考終了"
+    ],
+
+    [
+        "AD選考終了",
+        "🟦 AD選考終了"
+    ]
+
+];
+
+
+function getStatusText(status) {
+
+    const found =
+        STATUS_OPTIONS.find(function(item) {
+
+            return item[0] === status;
+
+        });
+
+
+    return found
+        ? found[1]
+        : (status || "");
+
+}
+
+
+function getDateText(item) {
+
+    if (
+        item.date_unknown ||
+        !item.audition_date
+    ) {
+
+        return "未定";
+
+    }
+
+
+    return item.audition_date
+        .replace(/-/g, "/");
+
+}
+
+
+/* =================================
    新規案件保存
-   ========================================================= */
+================================= */
 
 async function saveAudition() {
 
-    const caseNumberElement =
+    const numberEl =
         document.getElementById("caseNumber");
 
-    const caseTypeElement =
+    const typeEl =
         document.getElementById("caseType");
 
-    const auditionDateElement =
+    const dateEl =
         document.getElementById("auditionDate");
 
-    const dateUnknownElement =
+    const unknownEl =
         document.getElementById("dateUnknown");
 
 
     if (
-        !caseNumberElement ||
-        !caseTypeElement ||
-        !auditionDateElement ||
-        !dateUnknownElement
+        !numberEl ||
+        !typeEl ||
+        !dateEl ||
+        !unknownEl
     ) {
 
-        alert(
-            "入力画面の項目を確認できませんでした。\n" +
-            "ページを再読み込みしてください。"
-        );
-
         return;
+
     }
 
 
     const caseNumber =
-        caseNumberElement.value.trim();
+        numberEl.value.trim();
 
     const caseType =
-        caseTypeElement.value;
+        typeEl.value;
 
     const auditionDate =
-        auditionDateElement.value;
+        dateEl.value;
 
     const dateUnknown =
-        dateUnknownElement.checked;
+        unknownEl.checked;
 
-
-    /* 案件番号 */
 
     if (!/^\d{4}$/.test(caseNumber)) {
 
         alert(
-            "案件番号は4桁の数字で入力してください。\n" +
-            "例：0006、0007"
+            "案件番号は4桁で入力してください。\n例：0006"
         );
 
         return;
+
     }
 
 
-    /* 案件種類 */
-
-    if (caseType === "") {
+    if (!caseType) {
 
         alert(
             "案件種類を選択してください。"
         );
 
         return;
+
     }
 
 
-    /* オーディション日 */
-
-    if (!dateUnknown && auditionDate === "") {
+    if (
+        !dateUnknown &&
+        !auditionDate
+    ) {
 
         alert(
-            "オーディション日を入力するか、\n" +
-            "「オーディション日未定」にチェックしてください。"
+            "オーディション日を入力するか、「オーディション日未定」にチェックしてください。"
         );
 
         return;
+
     }
-
-
-    /* 新規案件の状態 */
-
-    const status = "書類選考中";
 
 
     try {
 
-        const response = await fetch(
-            SUPABASE_URL + "/rest/v1/auditions",
-            {
-                method: "POST",
+        const response =
+            await fetch(
 
-                headers: {
-                    "Content-Type": "application/json",
-                    "apikey": SUPABASE_KEY,
-                    "Authorization":
-                        "Bearer " + SUPABASE_KEY,
-                    "Prefer": "return=minimal"
-                },
+                SUPABASE_URL +
+                "/rest/v1/auditions",
 
-                body: JSON.stringify({
+                {
 
-                    case_number:
-                        caseNumber,
+                    method: "POST",
 
-                    /* 現在のSupabaseでは
-                       case_name列を使用 */
-                    case_name:
-                        caseType,
+                    headers:
+                        supabaseHeaders({
 
-                    audition_date:
-                        dateUnknown
-                            ? null
-                            : auditionDate,
+                            "Content-Type":
+                                "application/json",
 
-                    date_unknown:
-                        dateUnknown,
+                            "Prefer":
+                                "return=minimal"
 
-                    status:
-                        status
+                        }),
 
-                })
-            }
-        );
+                    body:
+                        JSON.stringify({
 
+                            case_number:
+                                caseNumber,
 
-        if (response.ok) {
+                            case_type:
+                                caseType,
 
-            alert(
-                "保存しました。"
+                            audition_date:
+                                dateUnknown
+                                    ? null
+                                    : auditionDate,
+
+                            date_unknown:
+                                dateUnknown,
+
+                            status:
+                                "書類選考中"
+
+                        })
+
+                }
+
             );
 
-            location.href = "list.html";
 
-            return;
+        if (!response.ok) {
+
+            throw new Error(
+                await response.text()
+            );
+
         }
 
 
-        const errorText =
-            await response.text();
+        alert("保存しました。");
 
 
-        console.error(
-            "Supabase保存エラー:",
-            response.status,
-            errorText
-        );
-
-
-        alert(
-            "保存できませんでした。\n\n" +
-            "Supabaseエラー：" +
-            response.status +
-            "\n\n" +
-            errorText
-        );
+        location.href =
+            "list.html";
 
 
     } catch (error) {
@@ -253,143 +273,430 @@ async function saveAudition() {
 
 
         alert(
-            "保存中にエラーが発生しました。\n" +
-            "インターネット接続を確認してください。"
+            "保存に失敗しました。\n\n" +
+            error.message
         );
-    }
-}
-/* =========================================================
-   案件一覧取得
-   ========================================================= */
 
-async function loadAuditions(){
+    }
+
+}
+
+
+/* =================================
+   状態選択
+================================= */
+
+function createStatusSelect(item) {
+
+    const select =
+        document.createElement("select");
+
+
+    select.className =
+        "status-select-list";
+
+
+    STATUS_OPTIONS.forEach(
+        function(pair) {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                pair[0];
+
+
+            option.textContent =
+                pair[1];
+
+
+            if (
+                item.status === pair[0]
+            ) {
+
+                option.selected =
+                    true;
+
+            }
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+
+    select.addEventListener(
+        "change",
+        function() {
+
+            updateAuditionStatus(
+                item.id,
+                select.value
+            );
+
+        }
+    );
+
+
+    return select;
+
+}
+
+
+/* =================================
+   一覧1行
+================================= */
+
+function createAuditionRow(item) {
+
+    const row =
+        document.createElement("tr");
+
+
+    /* 選択＋案件番号 */
+
+    const selectCell =
+        document.createElement("td");
+
+
+    const label =
+        document.createElement("label");
+
+
+    label.style.cssText =
+        "display:inline-flex;" +
+        "align-items:center;" +
+        "justify-content:center;" +
+        "gap:5px;" +
+        "cursor:pointer;" +
+        "white-space:nowrap;";
+
+
+    const checkbox =
+        document.createElement("input");
+
+
+    checkbox.type =
+        "checkbox";
+
+
+    checkbox.className =
+        "case-select-checkbox";
+
+
+    checkbox.value =
+        item.id;
+
+
+    checkbox.setAttribute(
+        "aria-label",
+        "案件 " +
+        (item.case_number || "") +
+        "を選択"
+    );
+
+
+    const number =
+        document.createElement("span");
+
+
+    number.textContent =
+        item.case_number || "";
+
+
+    label.appendChild(
+        checkbox
+    );
+
+
+    label.appendChild(
+        number
+    );
+
+
+    selectCell.appendChild(
+        label
+    );
+
+
+    row.appendChild(
+        selectCell
+    );
+
+
+    /* 案件種類 */
+
+    const typeCell =
+        document.createElement("td");
+
+
+    typeCell.className =
+        "type-cell";
+
+
+    typeCell.textContent =
+        getCaseTypeText(
+            item.case_type
+        );
+
+
+    row.appendChild(
+        typeCell
+    );
+
+
+    /* AD日 */
+
+    const dateCell =
+        document.createElement("td");
+
+
+    dateCell.textContent =
+        getDateText(item);
+
+
+    row.appendChild(
+        dateCell
+    );
+
+
+    /* 状態 */
+
+    const statusCell =
+        document.createElement("td");
+
+
+    statusCell.appendChild(
+        createStatusSelect(item)
+    );
+
+
+    row.appendChild(
+        statusCell
+    );
+
+
+    /* 編集 */
+
+    const editCell =
+        document.createElement("td");
+
+
+    const editButton =
+        document.createElement("button");
+
+
+    editButton.type =
+        "button";
+
+
+    editButton.textContent =
+        "✏️";
+
+
+    editButton.title =
+        "編集";
+
+
+    editButton.style.cssText =
+        "border:0;" +
+        "background:transparent;" +
+        "font-size:24px;" +
+        "cursor:pointer;" +
+        "padding:4px;";
+
+
+    editButton.addEventListener(
+        "click",
+        function() {
+
+            editAudition(
+                item.id
+            );
+
+        }
+    );
+
+
+    editCell.appendChild(
+        editButton
+    );
+
+
+    row.appendChild(
+        editCell
+    );
+
+
+    return row;
+
+}
+
+
+/* =================================
+   案件取得
+================================= */
+
+async function getAuditions(
+    query = ""
+) {
+
+    let url =
+        SUPABASE_URL +
+        "/rest/v1/auditions" +
+        "?select=*" +
+        "&order=case_number.asc";
+
+
+    if (query) {
+
+        url =
+            SUPABASE_URL +
+            "/rest/v1/auditions" +
+            "?case_number=eq." +
+            encodeURIComponent(query) +
+            "&select=*" +
+            "&order=case_number.asc";
+
+    }
+
+
+    const response =
+        await fetch(
+
+            url,
+
+            {
+
+                method: "GET",
+
+                headers:
+                    supabaseHeaders()
+
+            }
+
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            await response.text()
+        );
+
+    }
+
+
+    return await response.json();
+
+}
+
+
+/* =================================
+   登録案件一覧
+================================= */
+
+async function renderAuditionList(
+    query = ""
+) {
 
     const list =
         document.getElementById(
             "auditionList"
         );
 
-    if(!list){
 
-        return;
-
-    }
+    if (!list) return;
 
 
-    list.innerHTML =
-
-        "<tr>" +
-        "<td colspan='6'>読み込み中…</td>" +
-        "</tr>";
+    list.innerHTML = "";
 
 
-    try{
+    try {
 
-        const url =
-            SUPABASE_URL +
-            "/rest/v1/auditions" +
-            "?select=*" +
-            "&order=audition_date.asc";
+        const auditions =
+            await getAuditions(query);
 
 
-        const response =
-            await fetch(
-                url,
-                {
-                    method:"GET",
-                    headers:SUPABASE_HEADERS
-                }
+        if (
+            !Array.isArray(
+                auditions
+            ) ||
+            auditions.length === 0
+        ) {
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            const cell =
+                document.createElement(
+                    "td"
+                );
+
+
+            cell.colSpan =
+                5;
+
+
+            cell.textContent =
+                query
+                    ? "案件番号「" +
+                      query +
+                      "」は見つかりませんでした。"
+
+                    : "登録されている案件はありません。";
+
+
+            row.appendChild(
+                cell
             );
 
 
-        if(!response.ok){
-
-            const errorText =
-                await response.text();
-
-            console.error(
-                "一覧取得エラー:",
-                errorText
+            list.appendChild(
+                row
             );
 
-            list.innerHTML =
 
-                "<tr>" +
-                "<td colspan='6'>" +
-                "一覧を取得できませんでした。" +
-                "</td>" +
-                "</tr>";
+            updateSelectAllState();
+
 
             return;
 
         }
 
 
-        const data =
-            await response.json();
+        auditions.forEach(
+            function(item) {
+
+                list.appendChild(
+                    createAuditionRow(
+                        item
+                    )
+                );
+
+            }
+        );
 
 
-        displayAuditions(data);
+        updateSelectAllState();
 
-    }
-    catch(error){
+
+    } catch (error) {
 
         console.error(
-            "一覧取得エラー:",
+            "案件一覧取得エラー:",
             error
         );
 
-        list.innerHTML =
-
-            "<tr>" +
-            "<td colspan='6'>" +
-            "通信エラーが発生しました。" +
-            "</td>" +
-            "</tr>";
-
-    }
-
-}
-
-/* =========================================================
-   案件一覧表示
-   ---------------------------------------------------------
-   ☑ チェックして一括削除
-   ========================================================= */
-
-function displayAuditions(data){
-
-    const list =
-        document.getElementById(
-            "auditionList"
-        );
-
-
-    if(!list){
-
-        return;
-
-    }
-
-
-    list.innerHTML = "";
-
-
-    if(!data || data.length === 0){
-
-        list.innerHTML =
-            "<tr>" +
-            "<td colspan='5'>" +
-            "登録されている案件はありません。" +
-            "</td>" +
-            "</tr>";
-
-        return;
-
-    }
-
-
-    data.forEach(function(item){
 
         const row =
             document.createElement(
@@ -397,304 +704,22 @@ function displayAuditions(data){
             );
 
 
-        /* =====================================
-           案件番号＋チェックボックス
-           ===================================== */
-
-        const numberCell =
+        const cell =
             document.createElement(
                 "td"
             );
 
 
-        const checkbox =
-            document.createElement(
-                "input"
-            );
+        cell.colSpan =
+            5;
 
 
-        checkbox.type =
-            "checkbox";
+        cell.textContent =
+            "案件一覧を取得できませんでした。";
 
-        checkbox.className =
-            "case-select-checkbox";
-
-        checkbox.dataset.id =
-            item.id;
-
-        checkbox.dataset.caseNumber =
-            item.case_number || "";
-
-
-        checkbox.style.marginRight =
-            "6px";
-
-
-        numberCell.appendChild(
-            checkbox
-        );
-
-
-        const numberText =
-            document.createTextNode(
-                item.case_number || ""
-            );
-
-
-        numberCell.appendChild(
-            numberText
-        );
-
-
-        /* =====================================
-           案件種類
-           ===================================== */
-
-        const nameCell =
-            document.createElement(
-                "td"
-            );
-
-
-        if(
-            item.case_name === "movie"
-        ){
-
-            nameCell.textContent =
-                "🎬 映画・ドラマ・映像系";
-
-        }
-        else if(
-            item.case_name === "cm"
-        ){
-
-            nameCell.textContent =
-                "📸 CM・スチール系";
-
-        }
-        else{
-
-            nameCell.textContent =
-                item.case_name || "";
-
-        }
-
-
-        nameCell.className =
-            "type-cell";
-
-
-        /* =====================================
-           AD日
-           ===================================== */
-
-        const dateCell =
-            document.createElement(
-                "td"
-            );
-
-
-        if(item.date_unknown){
-
-            dateCell.textContent =
-                "未定";
-
-        }
-        else if(item.audition_date){
-
-            dateCell.textContent =
-                formatDate(
-                    item.audition_date
-                );
-
-        }
-        else{
-
-            dateCell.textContent =
-                "";
-
-        }
-
-/* =====================================
-   状態
-   ===================================== */
-
-const statusCell =
-    document.createElement("td");
-
-const select =
-    document.createElement("select");
-
-select.className =
-    "status-select-list";
-
-
-/*
-   管理者が変更できる状態は2つだけ
-
-   🟥 書類選考終了
-   🟦 AD選考終了
-
-   🟡 書類選考中は新規登録時に自動で入る。
-   現在「書類選考中」の案件だけ、
-   現在の状態として表示する。
-*/
-
-
-/* 現在の状態 */
-
-if(item.status === "書類選考中"){
-
-    const currentOption =
-        document.createElement("option");
-
-    currentOption.value =
-        "書類選考中";
-
-    currentOption.textContent =
-        "🟡 書類選考中";
-
-    currentOption.selected =
-        true;
-
-    select.appendChild(
-        currentOption
-    );
-
-}
-
-
-/* 選択できる状態 */
-
-const statuses = [
-
-    "書類選考終了",
-
-    "AD選考終了"
-
-];
-
-
-statuses.forEach(
-    function(status){
-
-        const option =
-            document.createElement(
-                "option"
-            );
-
-        option.value =
-            status;
-
-        option.textContent =
-            getStatusText(status);
-
-
-        if(item.status === status){
-
-            option.selected =
-                true;
-
-        }
-
-
-        select.appendChild(
-            option
-        );
-
-    }
-);
-
-
-statusCell.appendChild(
-    select
-);
- 
-        select.addEventListener(
-            "change",
-            function(){
-
-                updateStatus(
-                    item.id,
-                    select.value
-                );
-
-            }
-        );
-
-
-        statusCell.appendChild(
-            select
-        );
-
-
-        /* =====================================
-           編集
-           ===================================== */
-
-        const editCell =
-            document.createElement(
-                "td"
-            );
-
-
-        const editButton =
-            document.createElement(
-                "button"
-            );
-
-
-        editButton.textContent =
-            "✏️";
-
-
-        editButton.type =
-            "button";
-
-
-        editButton.title =
-            "編集";
-
-
-        editButton.addEventListener(
-            "click",
-            function(){
-
-                editAudition(
-                    item
-                );
-
-            }
-        );
-
-
-        editCell.appendChild(
-            editButton
-        );
-
-
-        /* =====================================
-           行に追加
-           ===================================== */
 
         row.appendChild(
-            numberCell
-        );
-
-        row.appendChild(
-            nameCell
-        );
-
-        row.appendChild(
-            dateCell
-        );
-
-        row.appendChild(
-            statusCell
-        );
-
-        row.appendChild(
-            editCell
+            cell
         );
 
 
@@ -702,51 +727,947 @@ statusCell.appendChild(
             row
         );
 
-    });
+    }
 
 }
-/* =========================================================
-   全選択・一括削除ボタン
-   ========================================================= */
+
+
+/* =================================
+   検索
+================================= */
+
+function searchAuditions() {
+
+    const input =
+        document.getElementById(
+            "caseNumberSearch"
+        );
+
+
+    if (!input) return;
+
+
+    renderAuditionList(
+        input.value.trim()
+    );
+
+}
+
+
+/* =================================
+   全選択
+================================= */
+
+function updateSelectAllState() {
+
+    const master =
+        document.getElementById(
+            "selectAllCheckbox"
+        );
+
+
+    if (!master) return;
+
+
+    const boxes =
+        Array.from(
+            document.querySelectorAll(
+                ".case-select-checkbox"
+            )
+        );
+
+
+    const checked =
+        boxes.filter(
+            function(box) {
+
+                return box.checked;
+
+            }
+        );
+
+
+    master.checked =
+        boxes.length > 0 &&
+        checked.length === boxes.length;
+
+
+    master.indeterminate =
+        checked.length > 0 &&
+        checked.length < boxes.length;
+
+}
+
+
+/* =================================
+   一括削除
+================================= */
+
+async function deleteSelectedAuditions() {
+
+    const boxes =
+        Array.from(
+            document.querySelectorAll(
+                ".case-select-checkbox:checked"
+            )
+        );
+
+
+    if (boxes.length === 0) {
+
+        alert(
+            "削除する案件を選択してください。"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !confirm(
+            boxes.length +
+            "件の案件を削除しますか？"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        for (
+            const box of boxes
+        ) {
+
+            const response =
+                await fetch(
+
+                    SUPABASE_URL +
+                    "/rest/v1/auditions?id=eq." +
+                    encodeURIComponent(
+                        box.value
+                    ),
+
+                    {
+
+                        method:
+                            "DELETE",
+
+                        headers:
+                            supabaseHeaders()
+
+                    }
+
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    await response.text()
+                );
+
+            }
+
+        }
+
+
+        alert(
+            boxes.length +
+            "件の案件を削除しました。"
+        );
+
+
+        renderAuditionList();
+
+
+    } catch (error) {
+
+        console.error(
+            "一括削除エラー:",
+            error
+        );
+
+
+        alert(
+            "一括削除に失敗しました。\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =================================
+   編集
+================================= */
+
+function editAudition(id) {
+
+    if (!id) {
+
+        alert(
+            "編集する案件が見つかりません。"
+        );
+
+        return;
+
+    }
+
+
+    localStorage.setItem(
+        "editingAuditionId",
+        id
+    );
+
+
+    location.href =
+        "edit.html";
+
+}
+
+
+/* =================================
+   状態変更
+================================= */
+
+async function updateAuditionStatus(
+    id,
+    status
+) {
+
+    try {
+
+        const response =
+            await fetch(
+
+                SUPABASE_URL +
+                "/rest/v1/auditions?id=eq." +
+                encodeURIComponent(id),
+
+                {
+
+                    method:
+                        "PATCH",
+
+                    headers:
+                        supabaseHeaders({
+
+                            "Content-Type":
+                                "application/json",
+
+                            "Prefer":
+                                "return=minimal"
+
+                        }),
+
+                    body:
+                        JSON.stringify({
+
+                            status:
+                                status
+
+                        })
+
+                }
+
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                await response.text()
+            );
+
+        }
+
+
+        await renderAuditionList();
+
+
+        updateHomeCounts();
+
+
+    } catch (error) {
+
+        console.error(
+            "状態更新エラー:",
+            error
+        );
+
+
+        alert(
+            "状態の更新に失敗しました。\nもう一度お試しください。"
+        );
+
+    }
+
+}
+
+
+/* =================================
+   日付関連
+================================= */
+
+async function fetchAllAuditions() {
+
+    const response =
+        await fetch(
+
+            SUPABASE_URL +
+            "/rest/v1/auditions" +
+            "?select=*" +
+            "&order=audition_date.asc",
+
+            {
+
+                method:
+                    "GET",
+
+                headers:
+                    supabaseHeaders()
+
+            }
+
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            await response.text()
+        );
+
+    }
+
+
+    return await response.json();
+
+}
+
+
+function getAuditionsForDate(
+    auditions,
+    offset
+) {
+
+    const target =
+        new Date();
+
+
+    target.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    target.setDate(
+        target.getDate() +
+        offset
+    );
+
+
+    return auditions.filter(
+        function(item) {
+
+            if (
+                item.date_unknown ||
+                !item.audition_date
+            ) {
+
+                return false;
+
+            }
+
+
+            const date =
+                new Date(
+                    item.audition_date +
+                    "T00:00:00"
+                );
+
+
+            date.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+            return (
+                date.getTime() ===
+                target.getTime()
+            );
+
+        }
+    );
+
+}
+
+
+/* =================================
+   今日・明日・3日前の表示
+================================= */
+
+function renderDateAuditionItems(
+    list,
+    auditions,
+    emptyText
+) {
+
+    list.innerHTML = "";
+
+
+    if (
+        auditions.length === 0
+    ) {
+
+        const item =
+            document.createElement(
+                "div"
+            );
+
+
+        item.textContent =
+            emptyText;
+
+
+        list.appendChild(
+            item
+        );
+
+
+        return;
+
+    }
+
+
+    auditions.forEach(
+        function(item) {
+
+            const box =
+                document.createElement(
+                    "div"
+                );
+
+
+            box.className =
+                "tomorrow-item";
+
+
+            const number =
+                document.createElement(
+                    "div"
+                );
+
+
+            number.textContent =
+                "案件番号：" +
+                (item.case_number || "");
+
+
+            const type =
+                document.createElement(
+                    "div"
+                );
+
+
+            type.textContent =
+                getCaseTypeText(
+                    item.case_type
+                );
+
+
+            const date =
+                document.createElement(
+                    "div"
+                );
+
+
+            date.textContent =
+                "AD日：" +
+                getDateText(item);
+
+
+            const status =
+                document.createElement(
+                    "div"
+                );
+
+
+            status.textContent =
+                getStatusText(
+                    item.status
+                );
+
+
+            box.appendChild(
+                number
+            );
+
+
+            box.appendChild(
+                type
+            );
+
+
+            box.appendChild(
+                date
+            );
+
+
+            box.appendChild(
+                status
+            );
+
+
+            list.appendChild(
+                box
+            );
+
+        }
+    );
+
+}
+
+
+/* =================================
+   今日
+================================= */
+
+async function renderTodayAuditions() {
+
+    const list =
+        document.getElementById(
+            "todayList"
+        );
+
+
+    if (!list) return;
+
+
+    try {
+
+        const auditions =
+            await fetchAllAuditions();
+
+
+        renderDateAuditionItems(
+
+            list,
+
+            getAuditionsForDate(
+                auditions,
+                0
+            ),
+
+            "本日のオーディションはありません"
+
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+
+/* =================================
+   明日
+================================= */
+
+async function renderTomorrowAuditions() {
+
+    const list =
+        document.getElementById(
+            "tomorrowList"
+        );
+
+
+    if (!list) return;
+
+
+    try {
+
+        const auditions =
+            await fetchAllAuditions();
+
+
+        renderDateAuditionItems(
+
+            list,
+
+            getAuditionsForDate(
+                auditions,
+                1
+            ),
+
+            "明日のオーディションはありません"
+
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+
+/* =================================
+   3日前
+================================= */
+
+async function renderCheckList() {
+
+    const list =
+        document.getElementById(
+            "checkList"
+        );
+
+
+    if (!list) return;
+
+
+    try {
+
+        const auditions =
+            await fetchAllAuditions();
+
+
+        renderDateAuditionItems(
+
+            list,
+
+            getAuditionsForDate(
+                auditions,
+                3
+            ),
+
+            "入力確認が必要な案件はありません"
+
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+
+/* =================================
+   3日前のお知らせ件数
+================================= */
+
+async function checkThreeDaysBefore() {
+
+    const countEl =
+        document.getElementById(
+            "inputCheckCount"
+        );
+
+
+    const noticeEl =
+        document.getElementById(
+            "inputCheckNotice"
+        );
+
+
+    if (
+        !countEl &&
+        !noticeEl
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const auditions =
+            await fetchAllAuditions();
+
+
+        const count =
+            getAuditionsForDate(
+                auditions,
+                3
+            ).length;
+
+
+        if (countEl) {
+
+            countEl.textContent =
+                count;
+
+        }
+
+
+        if (noticeEl) {
+
+            noticeEl.style.display =
+                count > 0
+                    ? "block"
+                    : "none";
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        if (noticeEl) {
+
+            noticeEl.style.display =
+                "none";
+
+        }
+
+    }
+
+}
+
+
+/* =================================
+   ホーム件数
+================================= */
+
+async function updateHomeCounts() {
+
+    const todayEl =
+        document.getElementById(
+            "todayCount"
+        );
+
+
+    const tomorrowEl =
+        document.getElementById(
+            "tomorrowCount"
+        );
+
+
+    if (
+        !todayEl &&
+        !tomorrowEl
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const auditions =
+            await fetchAllAuditions();
+
+
+        if (todayEl) {
+
+            todayEl.textContent =
+                getAuditionsForDate(
+                    auditions,
+                    0
+                ).length;
+
+        }
+
+
+        if (tomorrowEl) {
+
+            tomorrowEl.textContent =
+                getAuditionsForDate(
+                    auditions,
+                    1
+                ).length;
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "ホーム件数取得エラー:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =================================
+   ページ開始
+================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
-    function(){
+    function() {
 
-        const selectAllCheckbox =
+
+        /* 一覧 */
+
+        if (
+            document.getElementById(
+                "auditionList"
+            )
+        ) {
+
+            renderAuditionList();
+
+        }
+
+
+        /* 検索 */
+
+        const searchButton =
+            document.getElementById(
+                "searchButton"
+            );
+
+
+        const searchInput =
+            document.getElementById(
+                "caseNumberSearch"
+            );
+
+
+        const resetButton =
+            document.getElementById(
+                "searchResetButton"
+            );
+
+
+        if (searchButton) {
+
+            searchButton.addEventListener(
+                "click",
+                searchAuditions
+            );
+
+        }
+
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (
+                        event.key ===
+                        "Enter"
+                    ) {
+
+                        event.preventDefault();
+
+                        searchAuditions();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        if (resetButton) {
+
+            resetButton.addEventListener(
+                "click",
+                function() {
+
+                    if (searchInput) {
+
+                        searchInput.value =
+                            "";
+
+                    }
+
+
+                    renderAuditionList();
+
+                }
+            );
+
+        }
+
+
+        /* 全選択 */
+
+        const selectAll =
             document.getElementById(
                 "selectAllCheckbox"
             );
 
 
-        const bulkDeleteButton =
-            document.getElementById(
-                "bulkDeleteButton"
-            );
+        if (selectAll) {
 
-
-        /* 全選択 */
-
-        if(selectAllCheckbox){
-
-            selectAllCheckbox.addEventListener(
+            selectAll.addEventListener(
                 "change",
-                function(){
+                function() {
 
-                    const checkboxes =
-                        document.querySelectorAll(
+                    document
+                        .querySelectorAll(
                             ".case-select-checkbox"
+                        )
+                        .forEach(
+                            function(box) {
+
+                                box.checked =
+                                    selectAll.checked;
+
+                            }
                         );
 
 
-                    checkboxes.forEach(
-                        function(checkbox){
+                    updateSelectAllState();
 
-                            checkbox.checked =
-                                selectAllCheckbox.checked;
+                }
+            );
 
-                        }
-                    );
+
+            document.addEventListener(
+                "change",
+                function(event) {
+
+                    if (
+                        event.target.classList
+                            .contains(
+                                "case-select-checkbox"
+                            )
+                    ) {
+
+                        updateSelectAllState();
+
+                    }
 
                 }
             );
@@ -756,541 +1677,34 @@ document.addEventListener(
 
         /* 一括削除 */
 
-        if(bulkDeleteButton){
+        const bulkDeleteButton =
+            document.getElementById(
+                "bulkDeleteButton"
+            );
+
+
+        if (bulkDeleteButton) {
 
             bulkDeleteButton.addEventListener(
                 "click",
-                function(){
-
-                    deleteSelectedAuditions();
-
-                }
+                deleteSelectedAuditions
             );
 
         }
 
+
+        /* ホーム関連 */
+
+        checkThreeDaysBefore();
+
+        renderTodayAuditions();
+
+        renderTomorrowAuditions();
+
+        renderCheckList();
+
+        updateHomeCounts();
+
     }
+
 );
-
-/* =========================================================
-   日付表示
-   ========================================================= */
-
-function formatDate(dateString){
-
-    if(!dateString){
-
-        return "";
-
-    }
-
-
-    const parts =
-        dateString.split("-");
-
-
-    if(parts.length !== 3){
-
-        return dateString;
-
-    }
-
-
-    return (
-        parts[0] +
-        "/" +
-        parts[1] +
-        "/" +
-        parts[2]
-    );
-
-}
-
-
-/* =========================================================
-   状態表示
-   ========================================================= */
-
-function getStatusText(status){
-
-    if(status === "書類選考中"){
-
-        return "🟡 書類選考中";
-
-    }
-
-
-    if(status === "書類選考終了"){
-
-        return "🟥 書類選考終了";
-
-    }
-
-
-    if(status === "AD結果待ち"){
-
-        return "🟢 AD結果待ち";
-
-    }
-
-
-    if(status === "AD選考終了"){
-
-        return "🟦 AD選考終了";
-
-    }
-
-
-    return status || "";
-
-}
-
-
-/* =========================================================
-   状態変更
-   ========================================================= */
-
-async function updateStatus(
-    id,
-    newStatus
-){
-
-    try{
-
-        const response =
-            await fetch(
-                SUPABASE_URL +
-                "/rest/v1/auditions" +
-                "?id=eq." +
-                encodeURIComponent(id),
-                {
-                    method:"PATCH",
-
-                    headers:{
-                        ...SUPABASE_HEADERS,
-
-                        "Prefer":
-                            "return=minimal"
-                    },
-
-                    body:
-                        JSON.stringify({
-                            status:
-                                newStatus
-                        })
-                }
-            );
-
-
-        if(!response.ok){
-
-            const errorText =
-                await response.text();
-
-            console.error(
-                "状態変更エラー:",
-                errorText
-            );
-
-            alert(
-                "状態の変更に失敗しました。"
-            );
-
-            return;
-
-        }
-
-
-        console.log(
-            "状態を変更しました"
-        );
-
-    }
-    catch(error){
-
-        console.error(
-            error
-        );
-
-        alert(
-            "状態変更中にエラーが発生しました。"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   案件編集
-   ========================================================= */
-
-function editAudition(item){
-
-    localStorage.setItem(
-        "editingAuditionId",
-        item.id
-    );
-
-    location.href =
-        "edit.html";
-
-}
-
-    if(newName.trim() === ""){
-
-        alert(
-            "案件名を入力してください。"
-        );
-
-        return;
-
-    }
-
-
-    const newDate =
-        prompt(
-            "オーディション日を入力してください。\n例：2026-08-29\n未定の場合は空欄",
-            item.audition_date || ""
-        );
-
-
-    if(newDate === null){
-
-        return;
-
-    }
-
-
-    const dateUnknown =
-        newDate.trim() === "";
-
-
-    try{
-
-        const response =
-            await fetch(
-                SUPABASE_URL +
-                "/rest/v1/auditions" +
-                "?id=eq." +
-                encodeURIComponent(item.id),
-                {
-                    method:"PATCH",
-
-                    headers:{
-                        ...SUPABASE_HEADERS,
-
-                        "Prefer":
-                            "return=minimal"
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            case_name:
-                                newName.trim(),
-
-                            audition_date:
-                                dateUnknown
-                                    ? null
-                                    : newDate.trim(),
-
-                            date_unknown:
-                                dateUnknown
-
-                        })
-                }
-            );
-
-
-        if(!response.ok){
-
-            const errorText =
-                await response.text();
-
-            console.error(
-                "編集エラー:",
-                errorText
-            );
-
-            alert(
-                "編集に失敗しました。\n\n" +
-                errorText
-            );
-
-            return;
-
-        }
-
-
-        alert(
-            "変更しました。"
-        );
-
-
-        loadAuditions();
-
-    }
-    catch(error){
-
-        console.error(
-            error
-        );
-
-        alert(
-            "編集中にエラーが発生しました。"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   案件削除
-   ========================================================= */
-
-async function deleteAudition(
-    id,
-    caseNumber
-){
-
-    const answer =
-        confirm(
-            "案件番号 " +
-            caseNumber +
-            " を削除しますか？"
-        );
-
-
-    if(!answer){
-
-        return;
-
-    }
-
-
-    try{
-
-        const response =
-            await fetch(
-                SUPABASE_URL +
-                "/rest/v1/auditions" +
-                "?id=eq." +
-                encodeURIComponent(id),
-                {
-                    method:"DELETE",
-
-                    headers:
-                        SUPABASE_HEADERS
-                }
-            );
-
-
-        if(!response.ok){
-
-            const errorText =
-                await response.text();
-
-            console.error(
-                "削除エラー:",
-                errorText
-            );
-
-            alert(
-                "削除に失敗しました。\n\n" +
-                errorText
-            );
-
-            return;
-
-        }
-
-
-        alert(
-            "削除しました。"
-        );
-
-
-        loadAuditions();
-
-    }
-    catch(error){
-
-        console.error(
-            error
-        );
-
-        alert(
-            "削除中にエラーが発生しました。"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   案件番号検索
-   ========================================================= */
-
-async function searchAuditions(){
-
-    const searchInput =
-        document.getElementById(
-            "caseNumberSearch"
-        );
-
-
-    if(!searchInput){
-
-        return;
-
-    }
-
-
-    const keyword =
-        searchInput.value.trim();
-
-
-    if(keyword === ""){
-
-        loadAuditions();
-
-        return;
-
-    }
-
-
-    const list =
-        document.getElementById(
-            "auditionList"
-        );
-
-
-    if(list){
-
-        list.innerHTML =
-
-            "<tr>" +
-            "<td colspan='6'>検索中…</td>" +
-            "</tr>";
-
-    }
-
-
-    try{
-
-        const url =
-            SUPABASE_URL +
-            "/rest/v1/auditions" +
-            "?case_number=eq." +
-            encodeURIComponent(keyword) +
-            "&select=*" +
-            "&order=audition_date.asc";
-
-
-        const response =
-            await fetch(
-                url,
-                {
-                    method:"GET",
-                    headers:SUPABASE_HEADERS
-                }
-            );
-
-
-        if(!response.ok){
-
-            const errorText =
-                await response.text();
-
-            console.error(
-                errorText
-            );
-
-            alert(
-                "検索に失敗しました。"
-            );
-
-            return;
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        displayAuditions(data);
-
-    }
-    catch(error){
-
-        console.error(
-            error
-        );
-
-        alert(
-            "検索中にエラーが発生しました。"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   メンバー用データ取得
-   ---------------------------------------------------------
-   メンバー画面側に auditionList がある場合、
-   同じ一覧データを表示できます。
-   ========================================================= */
-
-async function loadMemberAuditions(){
-
-    try{
-
-        const response =
-            await fetch(
-                SUPABASE_URL +
-                "/rest/v1/auditions" +
-                "?select=case_number,case_name,audition_date,date_unknown,status" +
-                "&order=audition_date.asc",
-                {
-                    method:"GET",
-                    headers:SUPABASE_HEADERS
-                }
-            );
-
-
-        if(!response.ok){
-
-            console.error(
-                await response.text()
-            );
-
-            return;
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        return data;
-
-    }
-    catch(error){
-
-        console.error(
-            "メンバー案件取得エラー:",
-            error
-        );
-
-        return [];
-
-    }
-
-}
