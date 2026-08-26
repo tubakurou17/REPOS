@@ -408,16 +408,44 @@ function displayAuditions(data){
             item.case_number || "";
 
 
-        /* 案件名 */
+       /* 案件種類 */
 
-        const nameCell =
-            document.createElement(
-                "td"
-            );
+const nameCell =
+    document.createElement(
+        "td"
+    );
 
-        nameCell.textContent =
-            item.case_name || "";
+/*
+   案件種類の表示を正式名称に変換
+   既存の movie / cm データにも対応
+*/
 
+if (item.case_name === "movie") {
+
+    nameCell.textContent =
+        "🎬 映画・ドラマ・映像系";
+
+}
+else if (item.case_name === "cm") {
+
+    nameCell.textContent =
+        "📸 CM・スチール系";
+
+}
+else {
+
+    /*
+       すでに正式名称で保存されている場合は
+       そのまま表示
+    */
+
+    nameCell.textContent =
+        item.case_name || "";
+
+}
+
+nameCell.className =
+    "type-cell";
 
         /* AD日 */
 
