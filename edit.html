@@ -21,35 +21,34 @@ content="width=device-width, initial-scale=1.0">
 }
 
 .edit-card{
-    background:#fff;
+    background:#ffffff;
     border-radius:25px;
     padding:35px 30px;
-    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
 }
 
 .form-group{
-    margin-bottom:24px;
+    margin-bottom:26px;
 }
 
-.form-group label{
-    display:block;
+.form-title{
+    font-size:18px;
     font-weight:bold;
-    margin-bottom:9px;
-    font-size:17px;
+    margin-bottom:10px;
 }
 
-.form-group input,
-.form-group select{
+.edit-input,
+.edit-select{
     width:100%;
     box-sizing:border-box;
-    padding:14px;
+    padding:15px;
     border:1px solid #ddd;
     border-radius:14px;
     font-size:17px;
-    background:#fff;
+    background:#ffffff;
 }
 
-.form-group input[readonly]{
+.edit-input[readonly]{
     background:#f5f5f5;
     color:#666;
 }
@@ -61,9 +60,26 @@ content="width=device-width, initial-scale=1.0">
     margin-top:7px;
 }
 
+.checkbox-area{
+    text-align:center;
+    margin-top:12px;
+}
+
+.checkbox-area label{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+}
+
+.checkbox-area input{
+    width:18px;
+    height:18px;
+}
+
 .button-area{
     text-align:center;
-    margin-top:28px;
+    margin-top:30px;
 }
 
 .save-edit-button,
@@ -81,13 +97,18 @@ content="width=device-width, initial-scale=1.0">
 
 .save-edit-button{
     background:#1769e0;
-    color:#fff;
+    color:#ffffff;
 }
 
 .back-button{
-    background:#fff;
+    background:#ffffff;
     border:1px solid #aaa;
     color:#333;
+}
+
+.save-edit-button:hover,
+.back-button:hover{
+    opacity:0.9;
 }
 
 </style>
@@ -100,16 +121,10 @@ content="width=device-width, initial-scale=1.0">
 
 <div class="container form-container">
 
-
 <div class="edit-card">
 
 
-<h2
-style="
-text-align:center;
-margin-bottom:30px;
-"
->
+<h2 style="text-align:center;">
 📝 案件を編集
 </h2>
 
@@ -118,18 +133,19 @@ margin-bottom:30px;
 
 <div class="form-group">
 
-<label>
+<div class="form-title">
 案件番号
-</label>
+</div>
 
 <input
     type="text"
     id="editCaseNumber"
+    class="edit-input"
     readonly
 >
 
 <div class="note">
-案件番号は一覧管理のため変更しません。
+案件番号は確認用です。
 </div>
 
 </div>
@@ -139,17 +155,20 @@ margin-bottom:30px;
 
 <div class="form-group">
 
-<label>
+<div class="form-title">
 案件種類
-</label>
+</div>
 
-<select id="editCaseType">
+<select
+    id="editCaseType"
+    class="edit-select"
+>
 
-<option value="映画・ドラマ・映像系">
+<option value="movie">
 🎬 映画・ドラマ・映像系
 </option>
 
-<option value="CM・スチール系">
+<option value="cm">
 📸 CM・スチール系
 </option>
 
@@ -158,42 +177,34 @@ margin-bottom:30px;
 </div>
 
 
-<!-- オーディション日 -->
+<!-- AD日 -->
 
 <div class="form-group">
 
-<label>
+<div class="form-title">
 オーディション日
-</label>
+</div>
 
 <input
     type="date"
     id="editAuditionDate"
+    class="edit-input"
 >
 
+<div class="checkbox-area">
 
-<label
-style="
-font-weight:normal;
-margin-top:12px;
-display:flex;
-align-items:center;
-gap:8px;
-"
->
+<label>
 
 <input
     type="checkbox"
     id="editDateUnknown"
-    style="
-        width:18px;
-        height:18px;
-    "
 >
 
 オーディション日未定
 
 </label>
+
+</div>
 
 </div>
 
@@ -227,14 +238,13 @@ gap:8px;
 </div>
 
 
-<script src="app.js?v=20260826-1200"></script>
+<script src="app.js"></script>
 
 
 <script>
 
-
 /* =================================
-   編集する案件ID
+   編集対象の案件ID
 ================================= */
 
 const editingAuditionId =
@@ -278,6 +288,10 @@ async function loadEditAudition(){
 
                     headers:{
                         "apikey":
+                            SUPABASE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
                             SUPABASE_KEY
                     }
                 }
@@ -287,10 +301,17 @@ async function loadEditAudition(){
 
         if(!response.ok){
 
-            throw new Error(
-                "取得失敗"
+            const errorText =
+                await response.text();
+
+            console.error(
+                "案件取得エラー:",
+                errorText
             );
 
+            throw new Error(
+                "案件取得失敗"
+            );
         }
 
 
@@ -299,6 +320,7 @@ async function loadEditAudition(){
 
 
         if(
+            !auditions ||
             auditions.length === 0
         ){
 
@@ -330,11 +352,14 @@ async function loadEditAudition(){
 
         /* 案件種類 */
 
+        const caseType =
+            audition.case_type || "movie";
+
+
         document.getElementById(
             "editCaseType"
         ).value =
-            audition.case_type ||
-            "映画・ドラマ・映像系";
+            caseType;
 
 
         /* AD日 */
@@ -347,16 +372,20 @@ async function loadEditAudition(){
 
         /* AD日未定 */
 
+        const dateUnknown =
+            !!audition.date_unknown;
+
+
         document.getElementById(
             "editDateUnknown"
         ).checked =
-            !!audition.date_unknown;
+            dateUnknown;
 
 
         document.getElementById(
             "editAuditionDate"
         ).disabled =
-            !!audition.date_unknown;
+            dateUnknown;
 
 
     }catch(error){
@@ -425,6 +454,8 @@ document.getElementById(
             ).checked;
 
 
+        /* AD日チェック */
+
         if(
             !dateUnknown &&
             auditionDate === ""
@@ -440,7 +471,6 @@ document.getElementById(
 
         try{
 
-
             const response =
                 await fetch(
 
@@ -451,7 +481,6 @@ document.getElementById(
                     ),
 
                     {
-
                         method:"PATCH",
 
                         headers:{
@@ -467,10 +496,8 @@ document.getElementById(
                                 "application/json",
 
                             "Prefer":
-                                "return=minimal"
-
+                                "return=representation"
                         },
-
 
                         body:
                             JSON.stringify({
@@ -487,7 +514,6 @@ document.getElementById(
                                     dateUnknown
 
                             })
-
                     }
 
                 );
@@ -495,20 +521,43 @@ document.getElementById(
 
             if(!response.ok){
 
-                const text =
+                const errorText =
                     await response.text();
 
                 console.error(
                     "Supabase更新エラー:",
-                    text
+                    errorText
                 );
 
                 throw new Error(
-                    text
+                    errorText
+                );
+            }
+
+
+            const updatedData =
+                await response.json();
+
+
+            console.log(
+                "更新結果:",
+                updatedData
+            );
+
+
+            if(
+                !updatedData ||
+                updatedData.length === 0
+            ){
+
+                throw new Error(
+                    "更新された案件がありません。"
                 );
 
             }
 
+
+            /* 編集IDを削除 */
 
             localStorage.removeItem(
                 "editingAuditionId"
