@@ -550,7 +550,26 @@ function getMemberStatusText(status) {
 /* =================================
    AD日表示
 ================================= */
+function getMemberCaseTypeText(type) {
 
+    if (type === "cm") {
+        return "📸 CM・スチール系";
+    }
+
+    if (type === "movie") {
+        return "🎬 映画・ドラマ・映像系";
+    }
+
+    if (type === "CM・スチール系") {
+        return "📸 CM・スチール系";
+    }
+
+    if (type === "映画・ドラマ・映像系") {
+        return "🎬 映画・ドラマ・映像系";
+    }
+
+    return type || "";
+}
 function getMemberDateText(audition) {
 
 
