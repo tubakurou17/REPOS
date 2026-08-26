@@ -853,26 +853,27 @@ async function searchMemberCase() {
 
 
 
-                <div>
+          <div>
 
-                    <strong>
+    <strong>
+        案件種類
+    </strong>
 
-                        案件名
+    <span>
 
-                    </strong>
+        ${
+            audition.case_name === "movie"
+                ? "🎬 映画・ドラマ・映像系"
+                : audition.case_name === "cm"
+                    ? "📸 CM・スチール系"
+                    : escapeHtml(
+                        audition.case_name || ""
+                    )
+        }
 
-                    <span>
+    </span>
 
-                        ${escapeHtml(
-
-                            audition.case_name || ""
-
-                        )}
-
-                    </span>
-
-                </div>
-
+</div>      
 
 
                 <div>
