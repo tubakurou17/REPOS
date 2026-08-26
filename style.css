@@ -2152,3 +2152,155 @@ body {
     }
 
 }
+/* =========================================
+   REPOS 一括削除
+   ========================================= */
+
+.bulk-delete-area{
+    text-align:center;
+    margin:15px auto 25px;
+}
+
+.bulk-delete-button{
+    width:270px;
+    max-width:100%;
+    padding:12px 15px;
+    border:none;
+    border-radius:12px;
+    background:#e53935;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.bulk-delete-button:hover{
+    opacity:0.9;
+}
+
+
+/* 案件選択チェックボックス */
+
+.case-select-checkbox{
+    width:18px;
+    height:18px;
+    cursor:pointer;
+    vertical-align:middle;
+}
+
+
+/* PC */
+
+.list-table th:nth-child(1),
+.list-table td:nth-child(1){
+    width:14%;
+}
+
+.list-table th:nth-child(2),
+.list-table td:nth-child(2){
+    width:27%;
+}
+
+.list-table th:nth-child(3),
+.list-table td:nth-child(3){
+    width:18%;
+}
+
+.list-table th:nth-child(4),
+.list-table td:nth-child(4){
+    width:27%;
+}
+
+.list-table th:nth-child(5),
+.list-table td:nth-child(5){
+    width:14%;
+}
+
+
+/* スマホ */
+
+@media screen and (max-width:600px){
+
+    .list-table{
+        width:100% !important;
+        min-width:0 !important;
+        table-layout:fixed !important;
+    }
+
+
+    .list-table th,
+    .list-table td{
+        padding:6px 2px !important;
+    }
+
+
+    /* 選択＋案件番号 */
+
+    .list-table th:nth-child(1),
+    .list-table td:nth-child(1){
+        width:18% !important;
+    }
+
+
+    /* 案件種類 */
+
+    .list-table th:nth-child(2),
+    .list-table td:nth-child(2){
+        width:22% !important;
+    }
+
+
+    /* AD日 */
+
+    .list-table th:nth-child(3),
+    .list-table td:nth-child(3){
+        width:19% !important;
+    }
+
+
+    /* 状態 */
+
+    .list-table th:nth-child(4),
+    .list-table td:nth-child(4){
+        width:27% !important;
+    }
+
+
+    /* 編集 */
+
+    .list-table th:nth-child(5),
+    .list-table td:nth-child(5){
+        width:14% !important;
+    }
+
+
+    .case-select-checkbox{
+        width:15px;
+        height:15px;
+        margin-right:2px !important;
+    }
+
+
+    .list-table td button{
+        width:30px !important;
+        height:30px !important;
+        min-width:30px !important;
+        padding:0 !important;
+        font-size:15px !important;
+    }
+
+
+    .status-select-list{
+        width:100% !important;
+        min-width:0 !important;
+        font-size:9px !important;
+        padding:5px 1px !important;
+    }
+
+
+    .bulk-delete-button{
+        width:250px;
+        font-size:15px;
+    }
+
+}
