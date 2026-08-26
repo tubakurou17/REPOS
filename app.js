@@ -436,9 +436,11 @@ function createAuditionRow(item) {
 
 
     typeCell.textContent =
-        getCaseTypeText(
-            item.case_type
-        );
+    item.case_type === "cm"
+        ? "📷 CM・スチール系"
+        : item.case_type === "movie"
+        ? "🎬 映画・ドラマ・映像系"
+        : item.case_type || "";
 
 
     row.appendChild(
