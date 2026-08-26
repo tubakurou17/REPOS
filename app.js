@@ -33,28 +33,26 @@ function supabaseHeaders(extra = {}) {
 
 function getCaseTypeText(type) {
 
-    if (
-        type === "movie" ||
-        type === "映画・ドラマ・映像系"
-    ) {
+    const value =
+        String(type || "")
+            .trim()
+            .toLowerCase();
 
+    if (
+        value === "movie" ||
+        value === "映画・ドラマ・映像系"
+    ) {
         return "🎬 映画・ドラマ・映像系";
-
     }
-
 
     if (
-        type === "cm" ||
-        type === "CM・スチール系"
+        value === "cm" ||
+        value === "CM・スチール系".toLowerCase()
     ) {
-
         return "📸 CM・スチール系";
-
     }
-
 
     return type || "";
-
 }
 
 
