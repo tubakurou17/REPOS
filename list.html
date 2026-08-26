@@ -14,11 +14,6 @@ content="width=device-width, initial-scale=1.0">
 
 <style>
 
-/* =================================
-   REPOS 登録案件一覧
-   横スクロールなし
-================================= */
-
 .table-scroll{
     width:100%;
     overflow-x:hidden;
@@ -47,7 +42,7 @@ content="width=device-width, initial-scale=1.0">
 }
 
 
-/* 列の幅 */
+/* 横スクロールなしで5列を画面内に収める */
 
 .list-table th:nth-child(1),
 .list-table td:nth-child(1){
@@ -75,8 +70,6 @@ content="width=device-width, initial-scale=1.0">
 }
 
 
-/* 案件種類 */
-
 .type-cell{
     font-weight:bold;
     white-space:normal;
@@ -86,35 +79,23 @@ content="width=device-width, initial-scale=1.0">
 }
 
 
-/* 状態 */
-
 .status-select-list{
-
     width:100%;
     min-width:0;
     max-width:100%;
-
     box-sizing:border-box;
-
     padding:7px 2px;
-
     border-radius:10px;
-
     border:1px solid #ddd;
-
     background:#fff;
-
     font-size:13px;
-
     font-weight:bold;
-
     text-align:center;
-
     cursor:pointer;
 }
 
 
-/* スマホ */
+/* スマートフォン */
 
 @media (max-width:600px){
 
@@ -154,23 +135,14 @@ content="width=device-width, initial-scale=1.0">
 }
 
 .bulk-delete-button{
-
     width:270px;
-
     padding:15px;
-
     border:none;
-
     border-radius:15px;
-
     font-size:18px;
-
     font-weight:bold;
-
     cursor:pointer;
-
     background:#d9433e;
-
     color:#fff;
 }
 
@@ -262,13 +234,11 @@ content="width=device-width, initial-scale=1.0">
 </div>
 
 
-<!-- 登録案件一覧 -->
+<!-- 案件一覧 -->
 
 <div class="table-scroll">
 
-
 <table class="list-table">
-
 
 <thead>
 
@@ -285,21 +255,17 @@ content="width=device-width, initial-scale=1.0">
 
 </th>
 
-
 <th>
 案件種類
 </th>
-
 
 <th>
 AD日
 </th>
 
-
 <th>
 状態
 </th>
-
 
 <th>
 編集
@@ -316,16 +282,13 @@ AD日
 
 </table>
 
-
 </div>
 
 
 </div>
 
 
-<script
-src="app.js?v=20260826-1700"
-></script>
+<script src="app.js?v=20260826-1600"></script>
 
 
 </body>
