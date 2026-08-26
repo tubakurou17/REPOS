@@ -351,9 +351,10 @@ async function loadAuditions(){
 
 }
 
-
 /* =========================================================
    案件一覧表示
+   ---------------------------------------------------------
+   ☑ チェックして一括削除
    ========================================================= */
 
 function displayAuditions(data){
@@ -377,9 +378,8 @@ function displayAuditions(data){
     if(!data || data.length === 0){
 
         list.innerHTML =
-
             "<tr>" +
-            "<td colspan='6'>" +
+            "<td colspan='5'>" +
             "登録されている案件はありません。" +
             "</td>" +
             "</tr>";
@@ -397,57 +397,96 @@ function displayAuditions(data){
             );
 
 
-        /* 案件番号 */
+        /* =====================================
+           案件番号＋チェックボックス
+           ===================================== */
 
         const numberCell =
             document.createElement(
                 "td"
             );
 
-        numberCell.textContent =
+
+        const checkbox =
+            document.createElement(
+                "input"
+            );
+
+
+        checkbox.type =
+            "checkbox";
+
+        checkbox.className =
+            "case-select-checkbox";
+
+        checkbox.dataset.id =
+            item.id;
+
+        checkbox.dataset.caseNumber =
             item.case_number || "";
 
 
-       /* 案件種類 */
+        checkbox.style.marginRight =
+            "6px";
 
-const nameCell =
-    document.createElement(
-        "td"
-    );
 
-/*
-   案件種類の表示を正式名称に変換
-   既存の movie / cm データにも対応
-*/
+        numberCell.appendChild(
+            checkbox
+        );
 
-if (item.case_name === "movie") {
 
-    nameCell.textContent =
-        "🎬 映画・ドラマ・映像系";
+        const numberText =
+            document.createTextNode(
+                item.case_number || ""
+            );
 
-}
-else if (item.case_name === "cm") {
 
-    nameCell.textContent =
-        "📸 CM・スチール系";
+        numberCell.appendChild(
+            numberText
+        );
 
-}
-else {
 
-    /*
-       すでに正式名称で保存されている場合は
-       そのまま表示
-    */
+        /* =====================================
+           案件種類
+           ===================================== */
 
-    nameCell.textContent =
-        item.case_name || "";
+        const nameCell =
+            document.createElement(
+                "td"
+            );
 
-}
 
-nameCell.className =
-    "type-cell";
+        if(
+            item.case_name === "movie"
+        ){
 
-        /* AD日 */
+            nameCell.textContent =
+                "🎬 映画・ドラマ・映像系";
+
+        }
+        else if(
+            item.case_name === "cm"
+        ){
+
+            nameCell.textContent =
+                "📸 CM・スチール系";
+
+        }
+        else{
+
+            nameCell.textContent =
+                item.case_name || "";
+
+        }
+
+
+        nameCell.className =
+            "type-cell";
+
+
+        /* =====================================
+           AD日
+           ===================================== */
 
         const dateCell =
             document.createElement(
@@ -477,7 +516,9 @@ nameCell.className =
         }
 
 
-        /* 状態 */
+        /* =====================================
+           状態
+           ===================================== */
 
         const statusCell =
             document.createElement(
@@ -508,32 +549,41 @@ nameCell.className =
         ];
 
 
-        statuses.forEach(function(status){
+        statuses.forEach(
+            function(status){
 
-            const option =
-                document.createElement(
-                    "option"
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    status;
+
+
+                option.textContent =
+                    getStatusText(
+                        status
+                    );
+
+
+                if(
+                    item.status === status
+                ){
+
+                    option.selected =
+                        true;
+
+                }
+
+
+                select.appendChild(
+                    option
                 );
 
-            option.value =
-                status;
-
-            option.textContent =
-                getStatusText(status);
-
-            if(
-                item.status === status
-            ){
-
-                option.selected = true;
-
             }
-
-            select.appendChild(
-                option
-            );
-
-        });
+        );
 
 
         select.addEventListener(
@@ -554,7 +604,9 @@ nameCell.className =
         );
 
 
-        /* 編集 */
+        /* =====================================
+           編集
+           ===================================== */
 
         const editCell =
             document.createElement(
@@ -567,17 +619,26 @@ nameCell.className =
                 "button"
             );
 
+
         editButton.textContent =
-            "✏️ 編集";
+            "✏️";
+
 
         editButton.type =
             "button";
+
+
+        editButton.title =
+            "編集";
+
 
         editButton.addEventListener(
             "click",
             function(){
 
-                editAudition(item);
+                editAudition(
+                    item
+                );
 
             }
         );
@@ -588,43 +649,9 @@ nameCell.className =
         );
 
 
-        /* 削除 */
-
-        const deleteCell =
-            document.createElement(
-                "td"
-            );
-
-
-        const deleteButton =
-            document.createElement(
-                "button"
-            );
-
-        deleteButton.textContent =
-            "🗑️ 削除";
-
-        deleteButton.type =
-            "button";
-
-
-        deleteButton.addEventListener(
-            "click",
-            function(){
-
-                deleteAudition(
-                    item.id,
-                    item.case_number
-                );
-
-            }
-        );
-
-
-        deleteCell.appendChild(
-            deleteButton
-        );
-
+        /* =====================================
+           行に追加
+           ===================================== */
 
         row.appendChild(
             numberCell
@@ -646,10 +673,6 @@ nameCell.className =
             editCell
         );
 
-        row.appendChild(
-            deleteCell
-        );
-
 
         list.appendChild(
             row
@@ -658,7 +681,72 @@ nameCell.className =
     });
 
 }
+/* =========================================================
+   全選択・一括削除ボタン
+   ========================================================= */
 
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        const selectAllCheckbox =
+            document.getElementById(
+                "selectAllCheckbox"
+            );
+
+
+        const bulkDeleteButton =
+            document.getElementById(
+                "bulkDeleteButton"
+            );
+
+
+        /* 全選択 */
+
+        if(selectAllCheckbox){
+
+            selectAllCheckbox.addEventListener(
+                "change",
+                function(){
+
+                    const checkboxes =
+                        document.querySelectorAll(
+                            ".case-select-checkbox"
+                        );
+
+
+                    checkboxes.forEach(
+                        function(checkbox){
+
+                            checkbox.checked =
+                                selectAllCheckbox.checked;
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* 一括削除 */
+
+        if(bulkDeleteButton){
+
+            bulkDeleteButton.addEventListener(
+                "click",
+                function(){
+
+                    deleteSelectedAuditions();
+
+                }
+            );
+
+        }
+
+    }
+);
 
 /* =========================================================
    日付表示
