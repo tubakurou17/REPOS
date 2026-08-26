@@ -38,21 +38,22 @@ function getCaseTypeText(type) {
             .trim()
             .toLowerCase();
 
-    if (
-        value === "movie" ||
-        value === "映画・ドラマ・映像系"
-    ) {
-        return "🎬 映画・ドラマ・映像系";
-    }
+if (
+    value === "movie" ||
+    value === "映画・ドラマ・映像系"
+) {
+    return "🎬 映画・ドラマ・映像系";
+}
 
-    if (
-        value === "cm" ||
-        value === "CM・スチール系".toLowerCase()
-    ) {
-        return "📸 CM・スチール系";
-    }
+if (
+    value === "cm" ||
+    value === "CM・スチール系" ||
+    value === "cm・スチール系"
+) {
+    return "📸 CM・スチール系";
+}
 
-    return type || "";
+return value || "";    
 }
 
 
