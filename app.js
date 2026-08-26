@@ -536,18 +536,65 @@ function displayAuditions(data){
             "status-select-list";
 
 
-        const statuses = [
+ const statuses = [
+    "書類選考終了",
+    "AD選考終了"
+];
 
-            "書類選考中",
 
-            "書類選考終了",
+/* 新規登録時の状態は
+   「書類選考中」が自動で入るため、
+   現在の状態として表示だけする */
 
-            "AD結果待ち",
+if (item.status === "書類選考中") {
 
-            "AD選考終了"
+    const currentOption =
+        document.createElement("option");
 
-        ];
+    currentOption.value =
+        "書類選考中";
 
+    currentOption.textContent =
+        "🟡 書類選考中";
+
+    currentOption.selected =
+        true;
+
+    currentOption.disabled =
+        true;
+
+    select.appendChild(
+        currentOption
+    );
+
+}
+
+
+/* 管理者が変更できるのは2種類だけ */
+
+statuses.forEach(function(status){
+
+    const option =
+        document.createElement("option");
+
+    option.value =
+        status;
+
+    option.textContent =
+        getStatusText(status);
+
+    if(item.status === status){
+
+        option.selected =
+            true;
+
+    }
+
+    select.appendChild(
+        option
+    );
+
+});
 
         statuses.forEach(
             function(status){
