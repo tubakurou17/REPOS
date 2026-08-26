@@ -14,90 +14,34 @@ content="width=device-width, initial-scale=1.0">
 
 <style>
 
-body{
-    margin:0;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Helvetica Neue",
-        "Yu Gothic",
-        "Meiryo",
-        sans-serif;
-    background:#f7f8fc;
-}
-
-.container{
-    max-width:760px;
+.form-container{
+    max-width:600px;
     margin:30px auto;
-    padding:25px;
 }
 
-.card{
-    background:white;
+.edit-card{
+    background:#ffffff;
+    padding:30px;
     border-radius:25px;
-    padding:35px 30px;
     box-shadow:0 5px 20px rgba(0,0,0,0.08);
 }
 
-h2{
-    text-align:center;
-    margin-bottom:35px;
-    color:#666;
-}
-
-.form-group{
-    margin-bottom:28px;
-}
-
 .form-title{
+    text-align:center;
     font-size:18px;
     font-weight:bold;
-    margin-bottom:10px;
-    text-align:center;
+    margin:22px 0 10px;
 }
 
-input[type="text"],
-input[type="date"],
-select{
+.edit-input,
+.edit-select{
     width:100%;
     box-sizing:border-box;
-    padding:15px;
+    padding:14px;
     border:1px solid #ddd;
     border-radius:14px;
     font-size:17px;
-    background:white;
-}
-
-input[readonly]{
-    background:#f5f5f5;
-    color:#777;
-}
-
-.checkbox-area{
-    margin-top:14px;
-    text-align:center;
-    font-size:15px;
-}
-
-.checkbox-area label{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    cursor:pointer;
-}
-
-.checkbox-area input{
-    width:18px;
-    height:18px;
-    margin:0;
-}
-
-.note{
-    text-align:center;
-    color:#777;
-    font-size:13px;
-    margin-top:7px;
+    background:#fff;
 }
 
 .button-area{
@@ -124,13 +68,9 @@ input[readonly]{
 }
 
 .back-button{
-    background:#eeeeee;
-    color:#555;
-}
-
-.save-button:hover,
-.back-button:hover{
-    opacity:0.9;
+    background:#ffffff;
+    border:1px solid #aaa;
+    color:#333;
 }
 
 </style>
@@ -140,16 +80,16 @@ input[readonly]{
 
 <body>
 
-<div class="container">
+<div class="container form-container">
 
-<div class="card">
+<div class="edit-card">
 
-<h2>✏️ 案件情報を編集</h2>
+<h2 style="text-align:center;">
+📝 案件を編集
+</h2>
 
 
 <!-- 案件番号 -->
-
-<div class="form-group">
 
 <div class="form-title">
 案件番号
@@ -158,25 +98,21 @@ input[readonly]{
 <input
     type="text"
     id="editCaseNumber"
-    readonly
+    class="edit-input"
+    maxlength="4"
 >
-
-<div class="note">
-案件番号は変更できません。
-</div>
-
-</div>
 
 
 <!-- 案件種類 -->
-
-<div class="form-group">
 
 <div class="form-title">
 案件種類
 </div>
 
-<select id="editCaseType">
+<select
+    id="editCaseType"
+    class="edit-select"
+>
 
 <option value="movie">
 🎬 映画・ドラマ・映像系
@@ -188,12 +124,8 @@ input[readonly]{
 
 </select>
 
-</div>
 
-
-<!-- オーディション日 -->
-
-<div class="form-group">
+<!-- AD日 -->
 
 <div class="form-title">
 オーディション日
@@ -202,9 +134,11 @@ input[readonly]{
 <input
     type="date"
     id="editAuditionDate"
+    class="edit-input"
 >
 
-<div class="checkbox-area">
+
+<div style="text-align:center;margin-top:12px;">
 
 <label>
 
@@ -213,28 +147,25 @@ input[readonly]{
     id="editDateUnknown"
 >
 
-<span>
 オーディション日未定
-</span>
 
 </label>
 
 </div>
 
-</div>
 
-
-<!-- 保存 -->
+<!-- ボタン -->
 
 <div class="button-area">
 
 <button
     type="button"
     class="save-button"
-    onclick="saveEditedAudition()"
+    onclick="saveEdit()"
 >
 💾 変更を保存
 </button>
+
 
 <button
     type="button"
@@ -253,79 +184,73 @@ input[readonly]{
 
 <script src="app.js"></script>
 
+
 <script>
 
 /* =================================
    REPOS
-   案件情報編集
+   案件編集
+   案件番号で対象を取得
 ================================= */
 
 
-/* ---------------------------------
-   編集対象ID
---------------------------------- */
+/* URLから案件番号を取得 */
 
-const editingAuditionId =
-    localStorage.getItem(
-        "editingAuditionId"
-    );
+const params =
+    new URLSearchParams(location.search);
+
+const caseNumber =
+    params.get("caseNumber");
 
 
 /* =================================
-   編集する案件を取得
+   案件を読み込む
 ================================= */
 
 async function loadEditAudition(){
 
-    if(!editingAuditionId){
+    if(!caseNumber){
 
-        alert(
-            "編集する案件が見つかりません。"
-        );
+        alert("編集する案件番号がありません。");
 
-        location.href =
-            "list.html";
+        location.href="list.html";
 
         return;
-
     }
 
 
     try{
 
-        const response =
-            await fetch(
+        const response = await fetch(
 
-                SUPABASE_URL +
-                "/rest/v1/auditions?id=eq." +
-                encodeURIComponent(
-                    editingAuditionId
-                ) +
-                "&select=*",
+            SUPABASE_URL +
+            "/rest/v1/auditions?case_number=eq." +
+            encodeURIComponent(caseNumber) +
+            "&select=*",
 
-                {
-                    method:"GET",
+            {
+                method:"GET",
 
-                    headers:{
-                        "apikey":
-                            SUPABASE_KEY,
-
-                        "Authorization":
-                            "Bearer " +
-                            SUPABASE_KEY
-                    }
-
+                headers:{
+                    "apikey":SUPABASE_KEY,
+                    "Authorization":
+                        "Bearer " + SUPABASE_KEY
                 }
+            }
 
-            );
+        );
 
 
         if(!response.ok){
 
-            throw new Error(
-                "案件の取得に失敗しました。"
-            );
+            const errorText =
+                await response.text();
 
+            console.error(errorText);
+
+            throw new Error(
+                "案件取得エラー"
+            );
         }
 
 
@@ -334,6 +259,7 @@ async function loadEditAudition(){
 
 
         if(
+            !auditions ||
             auditions.length === 0
         ){
 
@@ -341,15 +267,9 @@ async function loadEditAudition(){
                 "編集する案件が見つかりません。"
             );
 
-            localStorage.removeItem(
-                "editingAuditionId"
-            );
-
-            location.href =
-                "list.html";
+            location.href="list.html";
 
             return;
-
         }
 
 
@@ -370,7 +290,7 @@ async function loadEditAudition(){
         document.getElementById(
             "editCaseType"
         ).value =
-            audition.case_name || "movie";
+            audition.case_type || "movie";
 
 
         /* AD日 */
@@ -386,13 +306,10 @@ async function loadEditAudition(){
         document.getElementById(
             "editDateUnknown"
         ).checked =
-            audition.date_unknown === true;
+            audition.date_unknown || false;
 
 
-        toggleEditDate();
-
-    }
-    catch(error){
+    }catch(error){
 
         console.error(
             "編集案件取得エラー:",
@@ -403,49 +320,7 @@ async function loadEditAudition(){
             "編集する案件の取得に失敗しました。"
         );
 
-        location.href =
-            "list.html";
-
-    }
-
-}
-
-
-/* =================================
-   AD日未定
-================================= */
-
-function toggleEditDate(){
-
-    const checkbox =
-        document.getElementById(
-            "editDateUnknown"
-        );
-
-    const dateInput =
-        document.getElementById(
-            "editAuditionDate"
-        );
-
-
-    if(!checkbox || !dateInput){
-
-        return;
-
-    }
-
-
-    if(checkbox.checked){
-
-        dateInput.value = "";
-
-        dateInput.disabled = true;
-
-    }
-    else{
-
-        dateInput.disabled = false;
-
+        location.href="list.html";
     }
 
 }
@@ -455,17 +330,12 @@ function toggleEditDate(){
    変更を保存
 ================================= */
 
-async function saveEditedAudition(){
+async function saveEdit(){
 
-    if(!editingAuditionId){
-
-        alert(
-            "編集する案件が見つかりません。"
-        );
-
-        return;
-
-    }
+    const newCaseNumber =
+        document.getElementById(
+            "editCaseNumber"
+        ).value.trim();
 
 
     const caseType =
@@ -486,20 +356,19 @@ async function saveEditedAudition(){
         ).checked;
 
 
-    /* 案件種類 */
+    /* 案件番号チェック */
 
-    if(caseType === ""){
+    if(newCaseNumber === ""){
 
         alert(
-            "案件種類を選択してください。"
+            "案件番号を入力してください。"
         );
 
         return;
-
     }
 
 
-    /* AD日 */
+    /* AD日チェック */
 
     if(
         !dateUnknown &&
@@ -507,68 +376,59 @@ async function saveEditedAudition(){
     ){
 
         alert(
-            "オーディション日を入力するか、" +
-            "「オーディション日未定」にチェックしてください。"
+            "オーディション日を入力するか、「オーディション日未定」にチェックしてください。"
         );
 
         return;
-
     }
 
 
     try{
 
-        const response =
-            await fetch(
+        const response = await fetch(
 
-                SUPABASE_URL +
-                "/rest/v1/auditions?id=eq." +
-                encodeURIComponent(
-                    editingAuditionId
-                ),
+            SUPABASE_URL +
+            "/rest/v1/auditions?case_number=eq." +
+            encodeURIComponent(caseNumber),
 
-                {
+            {
+                method:"PATCH",
 
-                    method:"PATCH",
+                headers:{
 
-                    headers:{
-                        "apikey":
-                            SUPABASE_KEY,
+                    "apikey":
+                        SUPABASE_KEY,
 
-                        "Authorization":
-                            "Bearer " +
-                            SUPABASE_KEY,
+                    "Authorization":
+                        "Bearer " + SUPABASE_KEY,
 
-                        "Content-Type":
-                            "application/json",
+                    "Content-Type":
+                        "application/json",
 
-                        "Prefer":
-                            "return=minimal"
-                    },
+                    "Prefer":
+                        "return=representation"
+                },
 
-                    body:
-                        JSON.stringify({
+                body:JSON.stringify({
 
-                            /*
-                               案件番号は変更しない
-                            */
+                    case_number:
+                        newCaseNumber,
 
-                            case_name:
-                                caseType,
+                    case_type:
+                        caseType,
 
-                            audition_date:
-                                dateUnknown
-                                    ? null
-                                    : auditionDate,
+                    audition_date:
+                        dateUnknown
+                            ? null
+                            : auditionDate,
 
-                            date_unknown:
-                                dateUnknown
+                    date_unknown:
+                        dateUnknown
 
-                        })
+                })
+            }
 
-                }
-
-            );
+        );
 
 
         if(!response.ok){
@@ -581,18 +441,19 @@ async function saveEditedAudition(){
                 errorText
             );
 
-            alert(
-                "変更を保存できませんでした。\n\n" +
+            throw new Error(
                 errorText
             );
-
-            return;
-
         }
 
 
-        localStorage.removeItem(
-            "editingAuditionId"
+        const result =
+            await response.json();
+
+
+        console.log(
+            "更新結果:",
+            result
         );
 
 
@@ -601,12 +462,10 @@ async function saveEditedAudition(){
         );
 
 
-        location.href =
-            "list.html";
+        location.href="list.html";
 
 
-    }
-    catch(error){
+    }catch(error){
 
         console.error(
             "案件更新エラー:",
@@ -622,21 +481,9 @@ async function saveEditedAudition(){
 }
 
 
-/* =================================
-   編集画面開始
-================================= */
+/* 編集画面開始 */
 
 loadEditAudition();
-
-
-/* AD日未定 */
-
-document.getElementById(
-    "editDateUnknown"
-).addEventListener(
-    "change",
-    toggleEditDate
-);
 
 </script>
 
