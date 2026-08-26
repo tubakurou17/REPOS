@@ -1975,3 +1975,180 @@ body {
         font-size: 14px !important;
     }
 }
+/* =========================================
+   REPOS 登録案件一覧
+   PC・スマホ表示調整
+   ========================================= */
+
+/* PC */
+
+.table-scroll{
+    width:100%;
+    max-width:900px;
+    margin:25px auto 0;
+    overflow-x:auto;
+    box-sizing:border-box;
+}
+
+.list-table{
+    width:100%;
+    max-width:900px;
+    min-width:0;
+    margin:0 auto;
+    table-layout:fixed;
+    border-collapse:collapse;
+    background:#fff;
+}
+
+.list-table th,
+.list-table td{
+    padding:9px 5px;
+    text-align:center;
+    vertical-align:middle;
+    box-sizing:border-box;
+}
+
+.list-table th:nth-child(1),
+.list-table td:nth-child(1){
+    width:11%;
+}
+
+.list-table th:nth-child(2),
+.list-table td:nth-child(2){
+    width:24%;
+}
+
+.list-table th:nth-child(3),
+.list-table td:nth-child(3){
+    width:17%;
+}
+
+.list-table th:nth-child(4),
+.list-table td:nth-child(4){
+    width:24%;
+}
+
+.list-table th:nth-child(5),
+.list-table td:nth-child(5){
+    width:12%;
+}
+
+.list-table th:nth-child(6),
+.list-table td:nth-child(6){
+    width:12%;
+}
+
+.type-cell{
+    font-weight:bold;
+    white-space:normal;
+}
+
+.status-select-list{
+    width:100%;
+    max-width:190px;
+    min-width:0;
+    box-sizing:border-box;
+    padding:7px 3px;
+    font-size:14px;
+}
+
+
+/* =========================================
+   スマホ
+   ========================================= */
+
+@media screen and (max-width:600px){
+
+    .container{
+        width:100%;
+        max-width:100%;
+        padding:10px 8px;
+        margin:20px auto;
+        box-sizing:border-box;
+    }
+
+    .table-scroll{
+        width:100%;
+        max-width:100%;
+        overflow-x:hidden;
+        margin-top:20px;
+    }
+
+    .list-table{
+        width:100% !important;
+        max-width:100% !important;
+        min-width:0 !important;
+        table-layout:fixed !important;
+        font-size:10px !important;
+    }
+
+    .list-table th,
+    .list-table td{
+        padding:6px 2px !important;
+        white-space:normal !important;
+        word-break:break-word;
+        overflow:hidden;
+        vertical-align:middle;
+        line-height:1.25;
+    }
+
+    /* 案件番号 */
+    .list-table th:nth-child(1),
+    .list-table td:nth-child(1){
+        width:13% !important;
+    }
+
+    /* 案件種類 */
+    .list-table th:nth-child(2),
+    .list-table td:nth-child(2){
+        width:23% !important;
+    }
+
+    /* AD日 */
+    .list-table th:nth-child(3),
+    .list-table td:nth-child(3){
+        width:18% !important;
+        white-space:nowrap !important;
+        font-size:9px !important;
+    }
+
+    /* 状態 */
+    .list-table th:nth-child(4),
+    .list-table td:nth-child(4){
+        width:24% !important;
+    }
+
+    /* 編集 */
+    .list-table th:nth-child(5),
+    .list-table td:nth-child(5){
+        width:11% !important;
+    }
+
+    /* 削除 */
+    .list-table th:nth-child(6),
+    .list-table td:nth-child(6){
+        width:11% !important;
+    }
+
+    /* 状態 */
+    .status-select-list{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:100% !important;
+        padding:5px 1px !important;
+        font-size:9px !important;
+        border-radius:8px;
+    }
+
+    /* 編集・削除ボタン */
+    .list-table td button{
+        width:28px !important;
+        height:28px !important;
+        min-width:28px !important;
+        padding:0 !important;
+        margin:0 auto !important;
+        font-size:14px !important;
+        box-sizing:border-box;
+    }
+
+}
