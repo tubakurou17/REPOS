@@ -106,7 +106,19 @@ content="width=device-width, initial-scale=1.0">
 >
 🔄 全件表示に戻す
 </button>
+<!-- 一括削除 -->
 
+<div class="bulk-delete-area">
+
+<button
+    type="button"
+    class="bulk-delete-button"
+    id="bulkDeleteButton"
+>
+🗑️ 選択した案件を削除
+</button>
+
+</div>
 
 <!-- 登録案件一覧 -->
 
@@ -118,7 +130,14 @@ content="width=device-width, initial-scale=1.0">
 
 <tr>
 
-<th>案件番号</th>
+<th>
+    <input
+        type="checkbox"
+        id="selectAllCheckbox"
+        title="全件選択"
+    >
+    案件番号
+</th>
 
 <th>案件種類</th>
 
@@ -127,8 +146,6 @@ content="width=device-width, initial-scale=1.0">
 <th>状態</th>
 
 <th>編集</th>
-
-<th>削除</th>
 
 </tr>
 
