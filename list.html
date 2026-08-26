@@ -14,61 +14,259 @@ content="width=device-width, initial-scale=1.0">
 
 <style>
 
+/* ================================
+   REPOS 登録案件一覧
+   横スクロールなし
+================================ */
+
 .table-scroll{
-    overflow-x:auto;
+    width:100%;
+    overflow-x:hidden;
 }
+
 .list-table{
     width:100%;
     min-width:0;
-    max-width:900px;
-    margin:0 auto;
     table-layout:fixed;
     border-collapse:collapse;
 }
 
-
 .list-table th,
 .list-table td{
-    padding:12px 8px;
+    padding:10px 4px;
     text-align:center;
     border:1px solid #ddd;
+    box-sizing:border-box;
+    overflow:hidden;
 }
 
 .list-table th{
     background:#f5f7ff;
     font-weight:bold;
+    font-size:14px;
 }
+
+
+/* ================================
+   列の幅
+================================ */
+
+/* チェック */
+.list-table th:nth-child(1),
+.list-table td:nth-child(1){
+    width:18%;
+}
+
+/* 案件種類 */
+.list-table th:nth-child(2),
+.list-table td:nth-child(2){
+    width:24%;
+}
+
+/* AD日 */
+.list-table th:nth-child(3),
+.list-table td:nth-child(3){
+    width:21%;
+}
+
+/* 状態 */
+.list-table th:nth-child(4),
+.list-table td:nth-child(4){
+    width:27%;
+}
+
+/* 編集 */
+.list-table th:nth-child(5),
+.list-table td:nth-child(5){
+    width:10%;
+}
+
+
+/* ================================
+   案件種類
+================================ */
 
 .type-cell{
     font-weight:bold;
-    white-space:nowrap;
+
+    white-space:normal;
+
+    overflow-wrap:anywhere;
+
+    word-break:break-word;
+
+    line-height:1.35;
 }
 
+
+/* ================================
+   状態
+================================ */
+
 .status-select-list{
+
     width:100%;
+
     min-width:0;
-    padding:7px 5px;
+
+    max-width:100%;
+
+    box-sizing:border-box;
+
+    padding:7px 2px;
+
     border-radius:10px;
+
     border:1px solid #ddd;
+
     background:#fff;
-    font-size:14px;
+
+    font-size:13px;
+
     font-weight:bold;
+
     text-align:center;
+
     cursor:pointer;
+}
+
+
+/* ================================
+   スマホ
+================================ */
+
+@media (max-width:600px){
+
+    .list-table th,
+    .list-table td{
+
+        padding:9px 2px;
+
+    }
+
+
+    .list-table th{
+
+        font-size:12px;
+
+    }
+
+
+    .list-table td{
+
+        font-size:13px;
+
+    }
+
+
+    .status-select-list{
+
+        font-size:11px;
+
+        padding:7px 0;
+
+        border-radius:9px;
+
+    }
+
+
+    .case-select-checkbox,
+    .select-all-checkbox{
+
+        width:20px !important;
+
+        height:20px !important;
+
+    }
+
+}
+
+
+/* ================================
+   一括削除
+================================ */
+
+.bulk-delete-area{
+
+    text-align:center;
+
+    margin:28px auto 20px;
+
+}
+
+
+.bulk-delete-button{
+
+    width:270px;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:15px;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    background:#d9433e;
+
+    color:#fff;
+
+}
+
+
+.bulk-delete-button:hover{
+
+    opacity:0.9;
+
+}
+
+
+/* ================================
+   チェックボックス
+================================ */
+
+.select-all-checkbox{
+
+    width:24px;
+
+    height:24px;
+
+    cursor:pointer;
+
+}
+
+
+.case-select-checkbox{
+
+    width:24px;
+
+    height:24px;
+
+    cursor:pointer;
+
 }
 
 </style>
 
 </head>
 
+
 <body>
 
+
 <div class="container">
+
 
 <h2>📋 登録案件一覧</h2>
 
 
-<!-- 案件番号検索 -->
+<!-- ================================
+     案件番号検索
+================================ -->
 
 <div class="search-area">
 
@@ -88,7 +286,9 @@ content="width=device-width, initial-scale=1.0">
 </div>
 
 
-<!-- ホーム -->
+<!-- ================================
+     ホーム
+================================ -->
 
 <button
     class="home-button"
@@ -98,7 +298,9 @@ content="width=device-width, initial-scale=1.0">
 </button>
 
 
-<!-- 全件表示 -->
+<!-- ================================
+     全件表示
+================================ -->
 
 <button
     class="search-reset-button"
@@ -106,7 +308,11 @@ content="width=device-width, initial-scale=1.0">
 >
 🔄 全件表示に戻す
 </button>
-<!-- 一括削除 -->
+
+
+<!-- ================================
+     一括削除
+================================ -->
 
 <div class="bulk-delete-area">
 
@@ -120,32 +326,51 @@ content="width=device-width, initial-scale=1.0">
 
 </div>
 
-<!-- 登録案件一覧 -->
+
+<!-- ================================
+     登録案件一覧
+================================ -->
 
 <div class="table-scroll">
 
+
 <table class="list-table">
+
 
 <thead>
 
 <tr>
 
 <th>
-    <input
-        type="checkbox"
-        id="selectAllCheckbox"
-        title="全件選択"
-    >
-    案件番号
+
+<input
+    type="checkbox"
+    id="selectAllCheckbox"
+    class="select-all-checkbox"
+    title="全選択"
+>
+
 </th>
 
-<th>案件種類</th>
 
-<th>AD日</th>
+<th>
+案件種類
+</th>
 
-<th>状態</th>
 
-<th>編集</th>
+<th>
+AD日
+</th>
+
+
+<th>
+状態
+</th>
+
+
+<th>
+編集
+</th>
 
 </tr>
 
@@ -153,17 +378,23 @@ content="width=device-width, initial-scale=1.0">
 
 
 <tbody id="auditionList">
+
 </tbody>
 
 
 </table>
 
-</div>
 
 </div>
 
 
-<script src="app.js"></script>
+</div>
+
+
+<script
+src="app.js?v=20260826-1200"
+></script>
+
 
 </body>
 
