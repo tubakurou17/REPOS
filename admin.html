@@ -131,7 +131,27 @@ select{
 .home-button:hover{
     opacity:0.9;
 }
+/* 管理者パソコン：入力欄を中央に小さくする */
+@media (min-width: 769px) {
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
 
+  .card {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    display: block;
+    box-sizing: border-box;
+  }
+}
 </style>
 
 </head>
