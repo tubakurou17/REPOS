@@ -131,26 +131,19 @@ select{
 .home-button:hover{
     opacity:0.9;
 }
-/* 管理者パソコン：入力欄を中央に小さくする */
+/* 管理者パソコン用：入力欄を中央に小さくする */
 @media (min-width: 769px) {
-  .container {
-    max-width: 760px;
-    margin: 0 auto;
-  }
 
-  .card {
-    max-width: 760px;
-    margin: 0 auto;
-  }
-
-  .form-group input,
+  .form-group input:not([type="checkbox"]),
   .form-group select {
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
-    display: block;
-    box-sizing: border-box;
+    width: 650px !important;
+    max-width: 650px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block !important;
+    box-sizing: border-box !important;
   }
+
 }
 </style>
 
