@@ -147,10 +147,17 @@ select{
 }
 /* パソコンだけ：オーディション日未定を中央 */
 @media (min-width: 769px) {
-  .form-group:has(input[type="checkbox"]) {
-    text-align: center !important;
-  }
-} 
+    .checkbox-area {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    .checkbox-area label {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+}
 </style>
 
 </head>
