@@ -145,15 +145,12 @@ select{
   }
 
 }
- /* オーディション日未定を中央寄せ */
+/* パソコンだけ：オーディション日未定を中央 */
 @media (min-width: 769px) {
-  label:has(input[type="checkbox"]) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
+  .form-group:has(input[type="checkbox"]) {
+    text-align: center !important;
   }
-}   
+} 
 </style>
 
 </head>
