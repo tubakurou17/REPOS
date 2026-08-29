@@ -2304,3 +2304,18 @@ body {
     }
 
 }
+/* 案件編集画面：オーディション日未定を中央にする */
+label:has(#dateUnknown) {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 15px 0 !important;
+    text-align: center !important;
+}
+
+#dateUnknown {
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 8px 0 0 !important;
+}
