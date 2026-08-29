@@ -61,11 +61,6 @@ content="width=device-width, initial-scale=1.0">
     margin-top:7px;
 }
 
-
-/* ================================
-   オーディション日未定
-   ================================ */
-
 .checkbox-area{
     width:100%;
     text-align:center;
@@ -88,11 +83,6 @@ content="width=device-width, initial-scale=1.0">
     cursor:pointer;
 }
 
-
-/* ================================
-   ボタン
-   ================================ */
-
 .button-area{
     text-align:center;
     margin-top:30px;
@@ -102,7 +92,6 @@ content="width=device-width, initial-scale=1.0">
 .back-button{
     width:270px;
     padding:15px;
-    border:none;
     border-radius:15px;
     font-size:18px;
     font-weight:bold;
@@ -113,6 +102,7 @@ content="width=device-width, initial-scale=1.0">
 
 .save-edit-button{
     background:#1769e0;
+    border:none;
     color:#ffffff;
 }
 
@@ -127,10 +117,12 @@ content="width=device-width, initial-scale=1.0">
     opacity:0.9;
 }
 
-
-/* ================================
-   管理者パソコン用
-   ================================ */
+.loading{
+    text-align:center;
+    padding:40px 10px;
+    color:#777;
+    font-size:16px;
+}
 
 @media (min-width:769px){
 
@@ -144,7 +136,7 @@ content="width=device-width, initial-scale=1.0">
         box-sizing:border-box !important;
     }
 
-    .form-group .checkbox-area{
+    .checkbox-area{
         width:650px !important;
         max-width:650px !important;
         margin:14px auto 0 !important;
@@ -154,11 +146,6 @@ content="width=device-width, initial-scale=1.0">
     }
 
 }
-
-
-/* ================================
-   スマホ
-   ================================ */
 
 @media (max-width:768px){
 
@@ -192,4 +179,464 @@ content="width=device-width, initial-scale=1.0">
 <div class="edit-card">
 
 
-<h2 style="text
+<h2 style="text-align:center;">
+📝 案件を編集
+</h2>
+
+
+<div id="loadingMessage" class="loading">
+読み込み中…
+</div>
+
+
+<div id="editForm" style="display:none;">
+
+
+<!-- 案件番号 -->
+
+<div class="form-group">
+
+<div class="form-title">
+案件番号
+</div>
+
+<input
+    type="text"
+    id="caseNumber"
+    class="edit-input"
+    readonly
+>
+
+<div class="note">
+案件番号は確認用です。
+</div>
+
+</div>
+
+
+<!-- 案件種類 -->
+
+<div class="form-group">
+
+<div class="form-title">
+案件種類
+</div>
+
+<select
+    id="caseType"
+    class="edit-select"
+>
+
+<option value="映画・ドラマ・映像系">
+🎬 映画・ドラマ・映像系
+</option>
+
+<option value="CM・スチール系">
+📸 CM・スチール系
+</option>
+
+</select>
+
+</div>
+
+
+<!-- オーディション日 -->
+
+<div class="form-group">
+
+<div class="form-title">
+オーディション日
+</div>
+
+<input
+    type="date"
+    id="auditionDate"
+    class="edit-input"
+>
+
+
+<div class="checkbox-area">
+
+<label>
+
+<input
+    type="checkbox"
+    id="dateUnknown"
+>
+
+<span>オーディション日未定</span>
+
+</label>
+
+</div>
+
+</div>
+
+
+<!-- ボタン -->
+
+<div class="button-area">
+
+<button
+    type="button"
+    class="save-edit-button"
+    id="saveButton"
+>
+💾 変更を保存
+</button>
+
+
+<button
+    type="button"
+    class="back-button"
+    onclick="location.href='list.html'"
+>
+📋 一覧へ戻る
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+"https://wnfuyczwuptkwicpullu.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_tJYjnFCgcvUII28F8sGKLQ_aRcwntH2";
+
+
+/* 編集する案件ID */
+
+const editingId =
+localStorage.getItem("editingAuditionId");
+
+
+const loadingMessage =
+document.getElementById("loadingMessage");
+
+const editForm =
+document.getElementById("editForm");
+
+
+/* IDがない場合 */
+
+if(!editingId){
+
+    loadingMessage.textContent =
+        "編集する案件が見つかりません。";
+
+}else{
+
+    loadEditData();
+
+}
+
+
+/* =========================
+   案件データを読み込む
+   ========================= */
+
+async function loadEditData(){
+
+    try{
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/auditions?id=eq." +
+                encodeURIComponent(editingId) +
+                "&select=*",
+                {
+                    method:"GET",
+                    headers:{
+                        "apikey":SUPABASE_KEY
+                    }
+                }
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "案件データの取得に失敗しました。"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if(data.length === 0){
+
+            throw new Error(
+                "編集する案件が見つかりません。"
+            );
+
+        }
+
+
+        const audition =
+            data[0];
+
+
+        /* 案件番号 */
+
+        document.getElementById(
+            "caseNumber"
+        ).value =
+            audition.case_number || "";
+
+
+        /* 案件種類 */
+
+        document.getElementById(
+            "caseType"
+        ).value =
+            audition.case_type || "映画・ドラマ・映像系";
+
+
+        /* オーディション日 */
+
+        document.getElementById(
+            "auditionDate"
+        ).value =
+            audition.audition_date || "";
+
+
+        /* オーディション日未定 */
+
+        document.getElementById(
+            "dateUnknown"
+        ).checked =
+            audition.date_unknown === true;
+
+
+        /* 未定なら日付入力を無効 */
+
+        updateDateInput();
+
+
+        loadingMessage.style.display =
+            "none";
+
+        editForm.style.display =
+            "block";
+
+
+    }catch(error){
+
+        console.error(
+            "編集画面読み込みエラー:",
+            error
+        );
+
+        loadingMessage.textContent =
+            "案件を読み込めませんでした。";
+
+    }
+
+}
+
+
+/* =========================
+   日付未定の切り替え
+   ========================= */
+
+document.getElementById(
+    "dateUnknown"
+).addEventListener(
+    "change",
+    updateDateInput
+);
+
+
+function updateDateInput(){
+
+    const checkbox =
+        document.getElementById(
+            "dateUnknown"
+        );
+
+    const dateInput =
+        document.getElementById(
+            "auditionDate"
+        );
+
+
+    if(checkbox.checked){
+
+        dateInput.value = "";
+
+        dateInput.disabled = true;
+
+        dateInput.style.background =
+            "#f5f5f5";
+
+    }else{
+
+        dateInput.disabled = false;
+
+        dateInput.style.background =
+            "#ffffff";
+
+    }
+
+}
+
+
+/* =========================
+   変更を保存
+   ========================= */
+
+document.getElementById(
+    "saveButton"
+).addEventListener(
+    "click",
+    saveChanges
+);
+
+
+async function saveChanges(){
+
+    const caseType =
+        document.getElementById(
+            "caseType"
+        ).value;
+
+
+    const dateUnknown =
+        document.getElementById(
+            "dateUnknown"
+        ).checked;
+
+
+    const auditionDate =
+        document.getElementById(
+            "auditionDate"
+        ).value;
+
+
+    /* 日付チェック */
+
+    if(
+        !dateUnknown &&
+        auditionDate === ""
+    ){
+
+        alert(
+            "オーディション日を入力するか、\n" +
+            "「オーディション日未定」にチェックしてください。"
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/auditions?id=eq." +
+                encodeURIComponent(editingId),
+                {
+                    method:"PATCH",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json",
+
+                        "apikey":
+                            SUPABASE_KEY,
+
+                        "Prefer":
+                            "return=minimal"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            case_type:
+                                caseType,
+
+                            audition_date:
+                                dateUnknown
+                                    ? null
+                                    : auditionDate,
+
+                            date_unknown:
+                                dateUnknown
+
+                        })
+                }
+            );
+
+
+        if(!response.ok){
+
+            const errorText =
+                await response.text();
+
+            console.error(
+                "変更保存エラー:",
+                errorText
+            );
+
+            alert(
+                "変更を保存できませんでした。\n\n" +
+                errorText
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "変更を保存しました。"
+        );
+
+
+        /* 保存後は一覧へ */
+
+        localStorage.removeItem(
+            "editingAuditionId"
+        );
+
+        location.href =
+            "list.html";
+
+
+    }catch(error){
+
+        console.error(
+            "変更保存エラー:",
+            error
+        );
+
+        alert(
+            "変更を保存できませんでした。\n" +
+            "インターネット接続を確認してください。"
+        );
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>
