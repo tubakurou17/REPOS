@@ -78,6 +78,7 @@ select{
     margin-top:7px;
 }
 
+/* オーディション日未定 */
 .checkbox-area{
     margin-top:14px;
     text-align:center;
@@ -131,53 +132,73 @@ select{
 .home-button:hover{
     opacity:0.9;
 }
-/* 管理者パソコン用：入力欄を中央に小さくする */
-@media (min-width: 769px) {
 
-  .form-group input:not([type="checkbox"]),
-  .form-group select {
-    width: 650px !important;
-    max-width: 650px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    display: block !important;
-    box-sizing: border-box !important;
-  }
 
-}
-/* パソコンだけ：オーディション日未定を中央 */
-@media (min-width: 769px) {
-    .checkbox-area {
-        width: 100% !important;
-        text-align: center !important;
+/* =========================================
+   管理者パソコン用
+   ========================================= */
+
+@media (min-width:769px){
+
+    /* 入力欄を中央にして650px */
+    .form-group input:not([type="checkbox"]),
+    .form-group select{
+        width:650px !important;
+        max-width:650px !important;
+        margin-left:auto !important;
+        margin-right:auto !important;
+        display:block !important;
+        box-sizing:border-box !important;
     }
 
-    .checkbox-area label {
-        display: inline-flex !important;
-        align-items: center;
-        justify-content: center;
+    /* オーディション日未定も650pxの範囲内で中央 */
+    .form-group .checkbox-area{
+        width:650px !important;
+        max-width:650px !important;
+        margin:14px auto 0 !important;
+        text-align:center !important;
+        display:block !important;
+        box-sizing:border-box !important;
     }
-}
-/* オーディション日未定を中央にする */
-@media (min-width: 769px) {
-  .form-group .checkbox-area {
-    width: 100% !important;
-    margin: 15px 0 !important;
-    display: flex !important;
-    justify-content: center !important;
-    text-align: center !important;
-  }
 
-  .form-group .checkbox-area label {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    margin: 0 auto !important;
-  }
-}    
+    .form-group .checkbox-area label{
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        margin:0 auto !important;
+        gap:8px !important;
+    }
+
+}
+
+
+/* =========================================
+   スマホ
+   ========================================= */
+
+@media (max-width:768px){
+
+    .container{
+        width:100%;
+        box-sizing:border-box;
+        margin:15px auto;
+        padding:15px;
+    }
+
+    .card{
+        padding:25px 18px;
+    }
+
+    .checkbox-area{
+        text-align:center;
+    }
+
+}
+
 </style>
 
 </head>
+
 
 <body>
 
@@ -220,15 +241,6 @@ select{
 
 <select
     id="caseType"
-    style="
-        width:100%;
-        box-sizing:border-box;
-        padding:15px;
-        border:1px solid #ddd;
-        border-radius:14px;
-        font-size:17px;
-        background:white;
-    "
 >
     <option value="movie">
         🎬 映画・ドラマ・映像系
